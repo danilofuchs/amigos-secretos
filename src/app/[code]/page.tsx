@@ -1,4 +1,6 @@
-export default function Page({
+import { kv } from "@vercel/kv";
+
+export default async function Page({
   params,
   searchParams,
 }: {
@@ -6,5 +8,17 @@ export default function Page({
   searchParams: { code: string };
 }) {
   const code = params.code === "v" ? searchParams.code : params.code;
-  return <h1>My Page {code}</h1>;
+
+  const gifted = await kv.get<string>(code);
+
+  if (!gifted) {
+    return <h1>Código inválido!</h1>;
+  }
+
+  return (
+    <h1>
+      O seu amigo secreto é...
+      {gifted}
+    </h1>
+  );
 }

@@ -1,3 +1,6 @@
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+
 export default function Home() {
   return (
     <main className="flex gap-20 flex-col items-center justify-between p-4 pt-48 max-w-md mx-auto">
@@ -12,22 +15,10 @@ export default function Home() {
               Código
             </label>
 
-            <input
-              name="code"
-              id="code"
-              className="bg-black rounded-lg border border-white px-3 py-1 uppercase text-white flex-grow"
-              minLength={4}
-              maxLength={4}
-              size={4}
-            />
+            <Input name="code" id="code" minLength={4} maxLength={4} size={4} />
           </div>
 
-          <button
-            type="submit"
-            className="bg-purple-700 font-medium rounded-lg px-5 py-2 border border-transparent hover:border-white transition-all box-border"
-          >
-            Descobrir
-          </button>
+          <Button type="submit">Descobrir</Button>
         </div>
       </form>
     </main>
