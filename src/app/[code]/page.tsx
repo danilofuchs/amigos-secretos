@@ -27,11 +27,9 @@ export default async function Page({
   }
 
   return (
-    <main className="min-h-screen h-full w-full">
-      <h1>
-        O seu amigo secreto é...
-        {gifted}
-      </h1>
+    <main className="min-h-screen flex items-center justify-center flex-col gap-4">
+      <h1 className="text-xl font-bold">O seu amigo secreto é...</h1>
+      <h2 className="text-5xl font-bold">{gifted}</h2>
     </main>
   );
 }
