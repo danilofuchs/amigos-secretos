@@ -9,6 +9,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Elefante Branco",
   description: "O melhor amigo secreto do mundo",
+  metadataBase:
+    process.env.NODE_ENV === "development"
+      ? undefined // Let it default to the current URL
+      : new URL("https://elefantebranco.vercel.app"),
 };
 
 export default function RootLayout({
