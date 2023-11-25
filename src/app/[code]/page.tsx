@@ -8,11 +8,7 @@ export default async function Page({
   params: { code: string };
   searchParams: { code: string };
 }) {
-  let code = params.code;
-  if (code === "v") {
-    code = searchParams.code;
-  }
-  code = code.toUpperCase();
+  const code = params.code.toUpperCase();
 
   const gifted = await kv.get<string>(code);
 

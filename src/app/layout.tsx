@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "O melhor amigo secreto do mundo",
   metadataBase:
     process.env.NODE_ENV === "development"
-      ? undefined // Let it default to the current URL
+      ? new URL("http://localhost:3600")
       : new URL("https://elefantebranco.vercel.app"),
 };
 

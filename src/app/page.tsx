@@ -1,14 +1,18 @@
+"use client";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { useState } from "react";
 
 export default function Home() {
+  const [code, setCode] = useState<string>("");
+
   return (
     <main className="flex gap-20 flex-col items-center justify-between p-4 pt-48 max-w-md mx-auto">
       <h1 className="font-bold text-4xl text-center">Elefante Branco</h1>
       <h2 className="font-medium text-xl text-center">
         Qual o código do seu amigo secreto?
       </h2>
-      <form action="/v" method="GET" className="h-full w-full">
+      <form action={`/${code}`} method="GET" className="h-full w-full">
         <div className="flex flex-col gap-4 w-full justify-center">
           <div className="flex gap-2 flex-row w-full justify-center items-center">
             <label className="font-medium" htmlFor="code">
@@ -17,6 +21,8 @@ export default function Home() {
 
             <Input
               className="uppercase"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
               name="code"
               id="code"
               required
