@@ -1,3 +1,4 @@
+import { Confetti } from "@/components/Confetti";
 import { kv } from "@vercel/kv";
 
 export default async function Page({
@@ -30,6 +31,7 @@ export default async function Page({
     <main className="min-h-screen flex items-center justify-center flex-col gap-4">
       <h1 className="text-xl font-bold">O seu amigo secreto é...</h1>
       <h2 className="text-5xl font-bold">{gifted}</h2>
+      <Confetti />
     </main>
   );
 }
