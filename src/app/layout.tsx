@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Elefante Branco",
   description: "O melhor amigo secreto do mundo",
   openGraph: {
-    images: "/public/elefante-branco.jpeg",
+    images: "/elefante-branco.jpeg",
   },
 };
 
