@@ -9,9 +9,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Elefante Branco",
   description: "O melhor amigo secreto do mundo",
-  openGraph: {
-    images: "/elefante-branco.jpeg",
-  },
 };
 
 export default function RootLayout({
