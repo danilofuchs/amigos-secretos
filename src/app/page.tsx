@@ -27,7 +27,7 @@ export default function Home() {
             />
           </div>
 
-          <Button type="submit">Descobrir</Button>
+          <Button type="submit">Descobrir meu amigo secreto</Button>
         </div>
       </form>
     </main>
