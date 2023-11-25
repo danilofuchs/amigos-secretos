@@ -15,7 +15,16 @@ export default function Home() {
               Código
             </label>
 
-            <Input name="code" id="code" minLength={4} maxLength={4} size={4} />
+            <Input
+              className="uppercase"
+              name="code"
+              id="code"
+              required
+              pattern="[A-Z0-9]{4}"
+              minLength={4}
+              maxLength={4}
+              size={4}
+            />
           </div>
 
           <Button type="submit">Descobrir</Button>
