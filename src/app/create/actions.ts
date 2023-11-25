@@ -1,4 +1,5 @@
 "use server";
+
 import { kv } from "@vercel/kv";
 
 export type ActionState =
@@ -56,7 +57,9 @@ export async function createRaffle(
   for (const name of names) {
     const code = randomString(4);
 
-    const randomName = getRandomItem(availableNames);
+    const pickableNames = except(availableNames, name);
+
+    const randomName = getRandomItem(pickableNames);
 
     await kv.set(code, randomName);
 
@@ -81,6 +84,12 @@ function randomString(length: number) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
+}
+
+function except<T>(set: Set<T>, item: T) {
+  const newSet = new Set(set);
+  newSet.delete(item);
+  return newSet;
 }
 
 function getRandomItem<T>(set: Set<T>) {
