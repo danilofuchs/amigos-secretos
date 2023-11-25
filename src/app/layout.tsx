@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
+import snowflake from "./snowflake.module.scss";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +17,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={twMerge(inter.className, "min-h-screen")}>
+      <body className={twMerge(inter.className, "min-h-screen relative")}>
         {children}
+        <div className="min-h-screen w-full h-full overflow-hidden absolute top-0 pointer-events-none">
+          {Array.from({ length: 150 }).map((_, i) => (
+            <div
+              key={i}
+              className={twMerge(
+                snowflake.snowflake,
+                i > 75 ? "hidden lg:inline" : ""
+              )}
+            />
+          ))}
+        </div>
       </body>
     </html>
   );

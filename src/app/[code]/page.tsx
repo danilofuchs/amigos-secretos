@@ -1,6 +1,4 @@
 import { kv } from "@vercel/kv";
-import { twMerge } from "tailwind-merge";
-import snowflake from "./snowflake.module.scss";
 
 export default async function Page({
   params,
@@ -9,25 +7,27 @@ export default async function Page({
   params: { code: string };
   searchParams: { code: string };
 }) {
-  const code = params.code === "v" ? searchParams.code : params.code;
+  let code = params.code;
+  if (code === "v") {
+    code = searchParams.code;
+  }
+  code = code.toUpperCase();
 
   const gifted = await kv.get<string>(code);
 
   if (!gifted) {
-    return <h1>Código inválido!</h1>;
+    return (
+      <main className="min-h-screen flex items-center justify-center flex-col gap-4">
+        <h1 className="text-3xl font-bold">Código inválido!</h1>
+        <a href="/" className="underline">
+          Voltar
+        </a>
+      </main>
+    );
   }
 
   return (
-    <main className="min-h-screen snow h-full w-full relative overflow-hidden">
-      {Array.from({ length: 150 }).map((_, i) => (
-        <div
-          key={i}
-          className={twMerge(
-            snowflake.snowflake,
-            i > 75 ? "hidden lg:inline" : ""
-          )}
-        />
-      ))}
+    <main className="min-h-screen h-full w-full">
       <h1>
         O seu amigo secreto é...
         {gifted}

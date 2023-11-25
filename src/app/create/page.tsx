@@ -14,7 +14,7 @@ export default function CreatePage() {
   const [state, dispatch] = useFormState(createRaffle, { type: undefined });
 
   return (
-    <main className="p-4 flex flex-col gap-10 max-w-xl mx-auto">
+    <main className="p-4 flex flex-col gap-10 max-w-xl mx-auto pt-56">
       <h1 className="text-4xl font-bold text-center">Elefante Branco</h1>
       <h2 className="text-xl font-medium text-center">
         Quem está participando?

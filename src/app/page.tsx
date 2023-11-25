@@ -20,7 +20,7 @@ export default function Home() {
               name="code"
               id="code"
               required
-              pattern="[A-Z0-9]{4}"
+              pattern="[a-zA-Z0-9]{4}"
               minLength={4}
               maxLength={4}
               size={4}
