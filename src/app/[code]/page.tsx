@@ -1,18 +1,13 @@
-import { Confetti } from "@/components/Confetti";
+import { HiddenName } from "@/components/HiddenName";
+import { HiddenRules } from "@/components/HiddenRules";
 import { kv } from "@vercel/kv";
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { code: string };
-  searchParams: { code: string };
-}) {
+export default async function Page({ params }: { params: { code: string } }) {
   const code = params.code.toUpperCase();
 
-  const gifted = await kv.get<string>(code);
+  const name = await kv.get<string>(code);
 
-  if (!gifted) {
+  if (!name) {
     return (
       <main className="min-h-screen flex items-center justify-center flex-col gap-4">
         <h1 className="text-3xl font-bold">Código inválido!</h1>
@@ -24,10 +19,11 @@ export default async function Page({
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center flex-col gap-4">
+    <main className="min-h-screen flex items-center justify-center flex-col gap-4 max-w-xl mx-auto px-8">
       <h1 className="text-xl font-bold">O seu amigo secreto é...</h1>
-      <h2 className="text-5xl font-bold">{gifted}</h2>
-      <Confetti />
+      <HiddenName name={name} />
+
+      <HiddenRules />
     </main>
   );
 }
