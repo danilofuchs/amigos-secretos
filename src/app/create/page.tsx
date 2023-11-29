@@ -67,7 +67,13 @@ export default function CreatePage() {
           <ul className="list-disc list-inside">
             {Object.entries(state.nameToCode).map(([name, code]) => (
               <li key={name}>
-                {name} -{" "}
+                {name}
+                <br />
+                Oi! Vou te passar o bilhete do nosso amigo secreto de Natal.
+                <br />
+                Esse link é secreto! Não mande pra ninguém, ta?
+                <br />
+                <br />
                 <a
                   className="underline font-bold"
                   href={new URL(`/${code}`, window.location.origin).toString()}
