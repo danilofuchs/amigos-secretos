@@ -23,7 +23,7 @@ export function HiddenRules() {
         <li>A partir de R$100,00</li>
         <li>
           Envie no grupo do Whats sugestões de presentes que gostaria de
-          receber. Muitos não se conhecem ainda!
+          receber. Alguns não se conhecem ainda!
         </li>
         <li>Proibido canecas!</li>
       </ul>
