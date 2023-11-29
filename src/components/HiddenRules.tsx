@@ -21,6 +21,10 @@ export function HiddenRules() {
       <ul className="list-disc list-inside">
         <li>Troca de presentes dia 25/12</li>
         <li>A partir de R$100,00</li>
+        <li>
+          Envie no grupo do Whats sugestões de presentes que gostaria de
+          receber. Muitos não se conhecem ainda!
+        </li>
         <li>Proibido canecas!</li>
       </ul>
     </div>
