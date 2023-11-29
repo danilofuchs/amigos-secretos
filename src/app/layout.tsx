@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={twMerge(inter.className, "min-h-screen relative")}>
         {children}
-        <div className="min-h-screen w-full h-full overflow-hidden absolute top-0 pointer-events-none">
+        <div className="min-h-screen w-full h-full overflow-hidden fixed top-0 pointer-events-none">
           {Array.from({ length: 150 }).map((_, i) => (
             <div
               key={i}

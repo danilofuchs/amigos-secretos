@@ -30,7 +30,6 @@ export async function createRaffle(
   formData: FormData
 ): Promise<ActionState> {
   const names = formData.getAll("names");
-  console.log(names);
   if (names.length < 2) {
     return {
       type: "error",

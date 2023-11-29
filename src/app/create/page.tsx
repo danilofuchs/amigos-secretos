@@ -38,6 +38,12 @@ export default function CreatePage() {
           onChange={(e) => setName(e.target.value)}
           required
           minLength={4}
+          onPaste={(e) => {
+            const text = e.clipboardData.getData("text/plain");
+            const names = text.split("\n");
+            setNames((prevNames) => [...prevNames, ...names]);
+            setName("");
+          }}
         />
         <Button type="submit">Adicionar</Button>
       </form>
@@ -66,7 +72,7 @@ export default function CreatePage() {
                   className="underline font-bold"
                   href={new URL(`/${code}`, window.location.origin).toString()}
                 >
-                  {code}
+                  {new URL(`/${code}`, window.location.origin).toString()}
                 </a>
               </li>
             ))}
