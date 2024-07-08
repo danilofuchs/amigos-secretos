@@ -69,7 +69,7 @@ export default function CreatePage() {
               <li key={name}>
                 {name}
                 <br />
-                Oi! Vou te passar o bilhete do nosso amigo secreto de Natal.
+                Oi! Vou te passar o bilhete do nosso amigo secreto.
                 <br />
                 Esse link é secreto! Não mande pra ninguém, ta?
                 <br />

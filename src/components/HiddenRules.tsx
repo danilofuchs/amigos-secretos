@@ -19,13 +19,12 @@ export function HiddenRules() {
     >
       <h3 className="font-medium text-lg">Regras</h3>
       <ul className="list-disc list-inside">
-        <li>Troca de presentes dia 25/12</li>
-        <li>A partir de R$100,00</li>
+        <li>Troca de presentes dia à definir no grupo</li>
+        <li>A partir de R$50,00</li>
         <li>
-          Envie no grupo do Whats sugestões de presentes que gostaria de
-          receber. Alguns não se conhecem ainda!
+          Coloque na descrição do grupo do Whats sugestões de presentes que gostaria de
+          receber.
         </li>
-        <li>Proibido canecas!</li>
       </ul>
     </div>
   );
