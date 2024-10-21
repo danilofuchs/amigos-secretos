@@ -9,23 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/kv": "^1.0.0",
-    "next": "14.0.3",
-    "react": "^18",
-    "react-dom": "^18",
-    "tailwind-merge": "^2.0.0"
+    "@vercel/kv": "^1.0.1",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
+    "@types/node": "^20.16.13",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
     "eslint-config-next": "14.0.3",
-    "postcss": "^8",
-    "sass": "^1.69.5",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "postcss": "^8.4.47",
+    "sass": "^1.80.3",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
   },
-  "packageManager": "pnpm@8.15.5+sha256.4b4efa12490e5055d59b9b9fc9438b7d581a6b7af3b5675eb5c5f447cee1a589"
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }
