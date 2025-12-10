@@ -1,6 +1,6 @@
 "use server";
 
-import { kv } from "@vercel/kv";
+import { redis } from "@/redis";
 
 export type ActionState =
   | {
@@ -60,7 +60,7 @@ export async function createRaffle(
 
     const randomName = getRandomItem(pickableNames);
 
-    await kv.set(code, randomName);
+    await redis.set(code, randomName);
 
     availableNames.delete(randomName);
 

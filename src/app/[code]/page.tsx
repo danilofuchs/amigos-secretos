@@ -1,11 +1,11 @@
 import { HiddenName } from "@/components/HiddenName";
 import { HiddenRules } from "@/components/HiddenRules";
-import { kv } from "@vercel/kv";
+import { redis } from "@/redis";
 
-export default async function Page({ params }: { params: { code: string } }) {
-  const code = params.code.toUpperCase();
+export default async function Page({ params }: PageProps<"/[code]">) {
+  const code = (await params).code.toUpperCase();
 
-  const name = await kv.get<string>(code);
+  const name = await redis.get<string>(code);
 
   if (!name) {
     return (
