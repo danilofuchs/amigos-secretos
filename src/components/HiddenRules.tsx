@@ -19,8 +19,8 @@ export function HiddenRules() {
     >
       <h3 className="font-medium text-lg">Regras</h3>
       <ul className="list-disc list-inside">
-        <li>Troca de presentes dia 16/12</li>
-        <li>R$ 35,00 - R$40,00</li>
+        <li>Troca de meias dia 20/12</li>
+        <li>R$ 20,00</li>
       </ul>
     </div>
   );
