@@ -13,8 +13,14 @@ export function HiddenName({ name }: Props) {
   const ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    setBlur(false);
+    const timeout = setTimeout(() => {
+      setBlur(false);
+    }, 0);
 
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       if (!window.confetti || !ref.current) {
         return;

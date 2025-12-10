@@ -1,6 +1,7 @@
 import { HiddenName } from "@/components/HiddenName";
 import { HiddenRules } from "@/components/HiddenRules";
 import { redis } from "@/redis";
+import Link from "next/link";
 
 export default async function Page({ params }: PageProps<"/[code]">) {
   const code = (await params).code.toUpperCase();
@@ -11,9 +12,9 @@ export default async function Page({ params }: PageProps<"/[code]">) {
     return (
       <main className="min-h-screen flex items-center justify-center flex-col gap-4">
         <h1 className="text-3xl font-bold">Código inválido!</h1>
-        <a href="/" className="underline">
+        <Link href="/" className="underline">
           Voltar
-        </a>
+        </Link>
       </main>
     );
   }

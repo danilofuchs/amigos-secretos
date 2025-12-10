@@ -7,7 +7,11 @@ export function HiddenRules() {
   const [hidden, setHidden] = useState<boolean>(true);
 
   useEffect(() => {
-    setHidden(false);
+    const timeout = setTimeout(() => {
+      setHidden(false);
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
