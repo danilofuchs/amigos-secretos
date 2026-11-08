@@ -7,6 +7,7 @@ import { InkFilter } from '@/components/InkFilter';
 import { Logo } from '@/components/Logo';
 import { Icon } from '@/components/Icon';
 import { HideWhileCreating } from '@/components/HideWhileCreating';
+import { AgentTools } from '@/components/AgentTools';
 import { FooterCreateLink } from '@/components/FooterCreateLink';
 import './globals.css';
 const handwriting = localFont({
@@ -46,6 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <I18nProvider locale={locale}>
           <InkFilter />
+          <AgentTools />
           <a className="skip-link" href="#main">
             {t('layout.skipContent', 'Skip to content')}
           </a>

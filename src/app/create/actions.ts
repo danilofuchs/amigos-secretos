@@ -5,8 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { ownerId } from '@/lib/session';
 import { createRaffle, updateRaffle, type RaffleAction } from '@/lib/store';
-import { validateInput, ValidationError, type RaffleInput } from '@/lib/raffle';
-import { isPastDay } from '@/lib/exchange-details';
+import { assertUpcoming, validateInput, ValidationError } from '@/lib/raffle';
 import { fieldOfError, type FormField } from '@/lib/form-fields';
 
 const ACTIONS: RaffleAction[] = ['save', 'draw', 'redraw', 'archive'];
@@ -19,14 +18,6 @@ export type ActionState = {
   /** The submitted form, so a field error disappears once that field changes. */
   input?: string;
 };
-/** A new raffle and every draw need an event that hasn't happened yet; today still counts. */
-function assertUpcoming(input: RaffleInput) {
-  // A day of slack: the organizer's "today" may still be yesterday in UTC.
-  const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
-  if (input.details && isPastDay(input.details.date, yesterday))
-    throw new ValidationError('errors.datePast', "The date can't be in the past.");
-}
-
 export async function saveRaffle(_previous: ActionState, form: FormData): Promise<ActionState> {
   const { t } = await getI18n();
   let destination: string | undefined;

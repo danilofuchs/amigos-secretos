@@ -11,6 +11,7 @@ import {
   budgetIsValid,
   budgetKinds,
   emptyDetails,
+  isPastDay,
   normalizeBudget,
   withDetailDefaults,
   type ExchangeDetails,
@@ -161,6 +162,14 @@ export function validateInput(input: unknown): RaffleInput {
     participants,
     exclusions: value.exclusions,
   };
+}
+
+/** A new raffle and every draw need an event that hasn't happened yet; today still counts. */
+export function assertUpcoming(input: RaffleInput) {
+  // A day of slack: the organizer's "today" may still be yesterday in UTC.
+  const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+  if (input.details && isPastDay(input.details.date, yesterday))
+    throw new ValidationError('errors.datePast', "The date can't be in the past.");
 }
 
 /** A random valid draw; not a uniform sample of every possible one. */
