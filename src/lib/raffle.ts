@@ -172,22 +172,52 @@ export function assertUpcoming(input: RaffleInput) {
     throw new ValidationError('errors.datePast', "The date can't be in the past.");
 }
 
-/** A random valid draw; not a uniform sample of every possible one. */
+/** Shuffles without bias, using the cryptographic generator. */
+function shuffle<T>(values: T[]) {
+  const result = [...values];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    // Both indices are bounded by the current array length.
+    [result[i], result[j]] = [result[j]!, result[i]!];
+  }
+  return result;
+}
+
+/** Shuffles to try before falling back; plenty for any realistic group, bounded for the rest. */
+const ATTEMPTS = 50_000;
+
+/**
+ * A random valid draw where every valid assignment is equally likely: shuffle, and keep the
+ * shuffle only if nobody drew themselves or someone they must not. When the rules are so tight
+ * that shuffles keep failing, a valid assignment is mixed by random swaps that keep it valid,
+ * which is close to uniform.
+ */
 export function draw(participants: Participant[], exclusions: Exclusion[]): Map<string, string> {
-  const shuffle = <T>(values: T[]) => {
-    const result = [...values];
-    for (let i = result.length - 1; i > 0; i--) {
-      const j = randomInt(i + 1);
-      // Both indices are bounded by the current array length.
-      [result[i], result[j]] = [result[j]!, result[i]!];
-    }
-    return result;
-  };
   const result = matchParticipants(participants, exclusions, shuffle);
   if (!result.ok)
     throw new ValidationError(
       'errors.theseExclusionsPreventValid',
       'These exclusions prevent a valid draw. Remove some and try again.',
     );
-  return result.recipientOf;
+  const ids = participants.map((p) => p.id);
+  const blocked = new Set(exclusions.map((e) => `${e.from}:${e.to}`));
+  const allowed = (giver: string, recipient: string) =>
+    giver !== recipient && !blocked.has(`${giver}:${recipient}`);
+  for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+    const recipients = shuffle(ids);
+    if (ids.every((giver, i) => allowed(giver, recipients[i]!)))
+      return new Map(ids.map((giver, i) => [giver, recipients[i]!]));
+  }
+  const recipientOf = new Map(result.recipientOf);
+  for (let step = 0; step < 200 * ids.length * ids.length; step++) {
+    const a = ids[randomInt(ids.length)]!,
+      b = ids[randomInt(ids.length)]!;
+    const toA = recipientOf.get(a)!,
+      toB = recipientOf.get(b)!;
+    if (a !== b && allowed(a, toB) && allowed(b, toA)) {
+      recipientOf.set(a, toB);
+      recipientOf.set(b, toA);
+    }
+  }
+  return recipientOf;
 }

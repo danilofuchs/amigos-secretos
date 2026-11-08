@@ -64,3 +64,26 @@ test('rejects normalized duplicate names and invalid exclusions', () => {
     ValidationError,
   );
 });
+
+test('every valid assignment is equally likely', () => {
+  // Four people, Ana must not draw Bruno: 6 of the 9 derangements are valid.
+  const exclusions = [{ from: '0', to: '1' }];
+  const counts = new Map<string, number>();
+  const draws = 18_000;
+  for (let i = 0; i < draws; i++) {
+    const pairs = draw(people, exclusions);
+    const key = people.map((p) => pairs.get(p.id)).join('');
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  assert.equal(counts.size, 6);
+  const expected = draws / 6;
+  const chiSquare = [...counts.values()].reduce(
+    (sum, n) => sum + (n - expected) ** 2 / expected,
+    0,
+  );
+  // 5 degrees of freedom: above 20.52 happens by chance less than once in a thousand runs.
+  assert.ok(
+    chiSquare < 20.52,
+    `chi-square ${chiSquare.toFixed(1)} for ${JSON.stringify([...counts])}`,
+  );
+});
