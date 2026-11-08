@@ -17,9 +17,9 @@ const handwriting = localFont({
   display: 'swap',
 });
 const ui = localFont({
-  src: '../../public/fonts/public-sans.ttf',
+  src: '../../public/fonts/figtree.ttf',
   variable: '--font-ui',
-  weight: '100 900',
+  weight: '300 900',
   display: 'swap',
 });
 export async function generateMetadata(): Promise<Metadata> {

@@ -975,7 +975,7 @@ export function RaffleForm({
           <Icon name="lock" />
           {t(
             'raffleForm.useBrowserReturnExchanges',
-            'Use this browser to return to your exchanges. Clearing cookies removes your access.',
+            "To come back to this exchange, use this same browser. On another phone or computer, or after clearing this browser's data, you won't be able to manage it.",
           )}{' '}
         </p>
       )}

@@ -35,17 +35,17 @@ typography:
     fontWeight: 500
     lineHeight: 1
   body:
-    fontFamily: "Public Sans, sans-serif"
+    fontFamily: "Figtree, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "Public Sans, sans-serif"
+    fontFamily: "Figtree, sans-serif"
     fontSize: "12px"
     fontWeight: 550
     lineHeight: 1.5
   button:
-    fontFamily: "Public Sans, sans-serif"
+    fontFamily: "Figtree, sans-serif"
     fontSize: "13px"
     fontWeight: 550
     lineHeight: 1.5
@@ -116,7 +116,7 @@ components:
 
 Notebook pages and loose slips make the familiar amigo secreto ritual tangible: write with a blue ballpoint pen, tear a horizontal strip by hand, fold it twice along vertical creases and open it to discover a name. The material world is light kraft with visible fibers, near-white ruled paper and imperfect blue writing. Shadows, creases and small rotations describe actual pieces of paper.
 
-Caveat carries handwriting; Public Sans keeps controls and instructions clear. Copy is direct, conversational Brazilian Portuguese. The organizer works on an open notebook, while the recipient gets a focused paper interaction. The confirmed background is pale, desaturated kraft; gray and orange backing are rejected.
+Caveat carries handwriting; Figtree keeps controls and instructions clear. Copy is direct, conversational Brazilian Portuguese. The organizer works on an open notebook, while the recipient gets a focused paper interaction. The confirmed background is pale, desaturated kraft; gray and orange backing are rejected.
 
 **Key Characteristics:**
 
@@ -124,7 +124,7 @@ Caveat carries handwriting; Public Sans keeps controls and instructions clear. C
 - White ruled notebook paper, a red margin and jagged hand-torn edges.
 - Subtle blue ballpoint coverage with small pigment skips and pressure variation.
 - Two deliberate opening steps with touch, tap and keyboard access.
-- Plain pt-BR instructions and legible Public Sans controls.
+- Plain pt-BR instructions and legible Figtree controls.
 
 ## Colors
 
@@ -157,7 +157,7 @@ The body repeats `/textures/kraft.webp` at (768px × 768px), beneath a uniform `
 
 **Display Font:** Caveat, with cursive fallback. Self-hosted variable font, weights (400–700).
 
-**Body Font:** Public Sans, with sans-serif fallback. Self-hosted variable font, weights (100–900).
+**Body Font:** Figtree, with sans-serif fallback. Self-hosted variable font, weights (300–900).
 
 **Character:** Written content feels like blue pen on a physical sheet; interface copy stays steady and readable. Both fonts load through `next/font/local` with swap behavior; licenses live beside the fonts in `public/fonts`.
 
@@ -207,7 +207,7 @@ Functional fields have restrained corners from the field radius token; buttons u
 
 ### Buttons
 
-Compact Public Sans controls keep the organizing work clear. Primary actions use blue ink with white text, the frontmatter padding and a minimum height (44px). Hover deepens the fill and adds a soft shadow; active fill is `#102c68`. Secondary actions use transparent fill, blue text and a muted blue border, with a pale blue hover fill. Small variants use (9px 13px) padding and minimum height (40px), raised to (44px) for coarse pointers. Disabled primary actions use a gray fill and no shadow. Visible keyboard focus is a (2px) blue outline with (5px) offset.
+Compact Figtree controls keep the organizing work clear. Primary actions use blue ink with white text, the frontmatter padding and a minimum height (44px). Hover deepens the fill and adds a soft shadow; active fill is `#102c68`. Secondary actions use transparent fill, blue text and a muted blue border, with a pale blue hover fill. Small variants use (9px 13px) padding and minimum height (40px), raised to (44px) for coarse pointers. Disabled primary actions use a gray fill and no shadow. Visible keyboard focus is a (2px) blue outline with (5px) offset.
 
 ### Inputs / Fields
 
@@ -215,7 +215,7 @@ General fields use paper fill, blue text, a thin gray outline and frontmatter fi
 
 ### Navigation
 
-The blue Caveat wordmark includes an inline notebook drawing and irregular underlines. Its slight rotation belongs to the logo, while the Public Sans navigation stays level. Header links expose the raffle list and bordered create action. On narrow screens navigation wraps; below (390px) it takes a separate full-width row. The list's tabs use a thin blue underline for selection. Preserve the skip link and visible focus states.
+The blue Caveat wordmark includes an inline notebook drawing and irregular underlines. Its slight rotation belongs to the logo, while the Figtree navigation stays level. Header links expose the raffle list and bordered create action. On narrow screens navigation wraps; below (390px) it takes a separate full-width row. The list's tabs use a thin blue underline for selection. Preserve the skip link and visible focus states.
 
 ### Notebook and Paper Containers
 
@@ -244,7 +244,7 @@ If WebGL fails, its context is lost, or the dynamic renderer is loading, a torn 
 ### Do:
 
 - **Do** keep kraft light and visibly fibrous behind near-white paper.
-- **Do** use Caveat for written names and Public Sans for functional labels and instructions.
+- **Do** use Caveat for written names and Figtree for functional labels and instructions.
 - **Do** keep paper backgrounds outside the ballpoint filter.
 - **Do** preserve both vertical folds, with tap and keyboard alternatives to dragging.
 - **Do** retain visible focus, live status messages, reduced-motion handling and coarse-pointer targets.

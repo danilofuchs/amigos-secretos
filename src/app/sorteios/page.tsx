@@ -119,7 +119,7 @@ export default async function RafflesPage({
         <Icon name="lock" />
         {t(
           'raffles.listBelongsBrowserClearing',
-          'This list belongs to this browser. Clearing cookies or switching devices removes your organizer access.',
+          "Your exchanges are saved only in this browser. On another phone or computer, or after clearing this browser's data, they won't show up here.",
         )}{' '}
       </p>
     </main>
