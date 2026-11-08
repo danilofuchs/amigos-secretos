@@ -3,6 +3,7 @@ import {
   budgetIsValid,
   emptyDetails,
   isPastDay,
+  withDetailDefaults,
   normalizeBudget,
   type ExchangeDetails,
 } from '@/lib/exchange-details';
@@ -16,7 +17,7 @@ import type { TargetAndTransition, Variants } from 'motion/react';
 import { saveRaffle, type ActionState } from '@/app/create/actions';
 import { type Exclusion, type Participant, type Raffle } from '@/lib/raffle';
 import { CleanCopyField } from './CleanCopyField';
-import { useDemoNameList } from '@/lib/demo-name';
+import { useDemoNameList, useSamplePick } from '@/lib/demo-name';
 import { NotebookRings } from './NotebookRings';
 import { DrawCeremony } from './DrawCeremony';
 import { dropBasket } from '@/lib/basket-stage';
@@ -129,16 +130,17 @@ export function RaffleForm({
 }) {
   const { t, locale } = useI18n();
   const sampleNames = useDemoNameList();
+  const samplePick = useSamplePick();
   const [participants, setParticipants] = useState<Participant[]>(raffle?.participants ?? []);
   const [exclusions, setExclusions] = useState<Exclusion[]>(raffle?.exclusions ?? []);
-  const [title, setTitle] = useState(raffle?.title ?? '');
+  const hosts = participants.length ? participants.map((p) => p.name) : sampleNames.split('\n');
+  const sampleHost = hosts[Math.floor(samplePick * hosts.length)] ?? '';
   const [details, setDetails] = useState<ExchangeDetails>(
-    raffle?.details ?? {
-      ...emptyDetails,
-      currency: defaultCurrency,
-      budgetKind: 'range',
-    },
+    raffle?.details
+      ? withDetailDefaults(raffle.details)
+      : { ...emptyDetails, currency: defaultCurrency, budgetKind: 'range' },
   );
+  const title = details.occasion.trim();
   const [currencyEdited, setCurrencyEdited] = useState(!!raffle?.details?.currency);
   const effectiveDetails = {
     ...details,
@@ -772,26 +774,29 @@ export function RaffleForm({
               <Sheet {...sheet} index={2}>
                 <fieldset disabled={pending || archived}>
                   <legend className="sr-only">
-                    {t('raffleForm.exchangeNameRules', 'Exchange name and rules')}
+                    {t('raffleForm.exchangeDetailsRules', 'Exchange details and rules')}
                   </legend>
                   <h2 id={`${pageId}-heading-2`} tabIndex={-1}>
                     {t('raffleForm.ourPlans', 'Our plans')}{' '}
                   </h2>
                   <div className="notebook-field">
-                    <label htmlFor="title">
-                      {t('raffleForm.exchangeName', 'Exchange name')}{' '}
+                    <label htmlFor="occasion">
+                      {t('raffleForm.occasion', 'Occasion')}{' '}
                       <span>{t('raffleForm.optional', 'optional')}</span>
                     </label>
                     <TeacherMark error={shownError('title')}>
                       {(describedBy) => (
                         <CleanCopyField
                           className="written-input"
-                          id="title"
+                          id="occasion"
                           aria-describedby={describedBy}
-                          value={title}
-                          onValue={setTitle}
                           maxLength={120}
-                          placeholder={t('raffleForm.ourGiftExchange', 'Our gift exchange')}
+                          value={details.occasion}
+                          onValue={(value) => setDetails((d) => ({ ...d, occasion: value }))}
+                          placeholder={t(
+                            'raffleForm.christmasBirthdayGetTogether',
+                            'Christmas, a birthday, a get-together…',
+                          )}
                           autoComplete="off"
                         />
                       )}
@@ -801,36 +806,54 @@ export function RaffleForm({
                     {() => (
                       <div className="exchange-details">
                         <div className="exchange-details-fields">
-                          <div className="notebook-field">
-                            <label htmlFor="occasion">{t('raffleForm.occasion', 'Occasion')}</label>
-                            <CleanCopyField
-                              className="written-input"
-                              id="occasion"
-                              maxLength={120}
-                              value={details.occasion}
-                              onValue={(value) => setDetails((d) => ({ ...d, occasion: value }))}
-                              placeholder={t(
-                                'raffleForm.christmasBirthdayGetTogether',
-                                'Christmas, a birthday, a get-together…',
-                              )}
-                            />
-                          </div>
-                          <div className="notebook-field">
+                          <div className="notebook-field exchange-when">
                             <label htmlFor="exchange-date" id="exchange-date-label">
                               {t('raffleForm.exchangeDate', 'Exchange date')}
                             </label>
-                            <TeacherMark error={shownError('date')} className="date-mark">
-                              {() => (
-                                <SegmentedDate
-                                  id="exchange-date"
-                                  labelledBy="exchange-date-label"
-                                  disabled={pending || archived}
-                                  value={details.date}
-                                  onValue={(value) => setDetails((d) => ({ ...d, date: value }))}
-                                  onIncomplete={setDateIncomplete}
+                            <div className="date-time">
+                              <TeacherMark error={shownError('date')} className="date-mark">
+                                {() => (
+                                  <SegmentedDate
+                                    id="exchange-date"
+                                    labelledBy="exchange-date-label"
+                                    disabled={pending || archived}
+                                    value={details.date}
+                                    onValue={(value) => setDetails((d) => ({ ...d, date: value }))}
+                                    onIncomplete={setDateIncomplete}
+                                  />
+                                )}
+                              </TeacherMark>
+                              <span className="date-time-joiner" aria-hidden="true">
+                                {t('raffleForm.atTime', 'at')}
+                              </span>
+                              <HighlightBox className="exchange-time">
+                                <input
+                                  type="time"
+                                  className="written-input"
+                                  aria-label={t('raffleForm.timeOptional', 'Time (optional)')}
+                                  value={details.time}
+                                  onChange={(e) =>
+                                    setDetails((d) => ({ ...d, time: e.target.value }))
+                                  }
                                 />
+                              </HighlightBox>
+                            </div>
+                          </div>
+                          <div className="notebook-field exchange-location">
+                            <label htmlFor="location">{t('raffleForm.location', 'Location')}</label>
+                            <CleanCopyField
+                              className="written-input"
+                              id="location"
+                              maxLength={120}
+                              value={details.location}
+                              onValue={(value) => setDetails((d) => ({ ...d, location: value }))}
+                              placeholder={t(
+                                'raffleForm.locationPlaceholder',
+                                "{name}'s place, the office, a restaurant…",
+                                { name: sampleHost },
                               )}
-                            </TeacherMark>
+                              autoComplete="off"
+                            />
                           </div>
                           <div className="notebook-field exchange-theme">
                             <label htmlFor="theme">{t('raffleForm.giftTheme', 'Gift theme')}</label>

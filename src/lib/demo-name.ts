@@ -57,3 +57,14 @@ function clientList() {
 export function useDemoNameList() {
   return useSyncExternalStore(subscribeNever, clientList, () => SERVER_LIST);
 }
+
+let pickedFraction: number | undefined;
+function clientFraction() {
+  pickedFraction ??= Math.random();
+  return pickedFraction;
+}
+
+/** A number in [0, 1) drawn once per page load in the browser, for picking among sample values. */
+export function useSamplePick() {
+  return useSyncExternalStore(subscribeNever, clientFraction, () => 0);
+}

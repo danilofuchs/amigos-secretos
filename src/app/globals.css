@@ -2781,8 +2781,31 @@ body {
 .exchange-details-fields .notebook-field {
   min-width: 0;
 }
-.exchange-details-fields .exchange-theme {
+.exchange-details-fields :is(.exchange-theme, .exchange-when, .exchange-location) {
   grid-column: 1 / -1;
+}
+/* The day and the optional time read as one written line: "24/12/2026 às 19:30". */
+.date-time {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.date-time-joiner {
+  color: var(--muted);
+  font:
+    500 19px/1 var(--font-handwriting),
+    cursive;
+}
+.notebook .exchange-time input.written-input {
+  width: 5.6em;
+  height: var(--line);
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.exchange-time input::-webkit-calendar-picker-indicator {
+  opacity: 0.45;
 }
 .notebook-page .exchange-currency .paper-select {
   width: 100%;

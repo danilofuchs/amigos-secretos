@@ -2,6 +2,16 @@
 import { formatBudget } from '@/lib/i18n';
 import type { ExchangeDetails } from '@/lib/raffle';
 import { useI18n } from '@/components/I18nContext';
+/** The meeting day and time in the reader's language; either part may be missing. */
+function formatWhen(locale: string, date: string, time: string) {
+  const at = new Date(`${date || '2000-01-01'}T${time || '12:00'}:00Z`);
+  return new Intl.DateTimeFormat(locale, {
+    ...(date ? { dateStyle: 'long' } : {}),
+    ...(time ? { timeStyle: 'short' } : {}),
+    timeZone: 'UTC',
+  }).format(at);
+}
+
 export function HiddenRules({ rules, details }: { rules: string; details?: ExchangeDetails }) {
   const { t, locale } = useI18n();
   return (
@@ -10,20 +20,16 @@ export function HiddenRules({ rules, details }: { rules: string; details?: Excha
         <h2>{t('hiddenRules.whatWeAgreed', 'What we agreed')}</h2>
         {details && (
           <dl className="exchange-summary">
-            {details.occasion && (
-              <>
-                <dt>{t('hiddenRules.occasion', 'Occasion')}</dt>
-                <dd>{details.occasion}</dd>
-              </>
-            )}
-            {details.date && (
+            {(details.date || details.time) && (
               <>
                 <dt>{t('hiddenRules.exchangeDate', 'Exchange date')}</dt>
-                <dd>
-                  {new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
-                    new Date(`${details.date}T12:00:00Z`),
-                  )}
-                </dd>
+                <dd>{formatWhen(locale, details.date, details.time)}</dd>
+              </>
+            )}
+            {details.location && (
+              <>
+                <dt>{t('hiddenRules.location', 'Location')}</dt>
+                <dd>{details.location}</dd>
               </>
             )}
             {formatBudget(locale, details) && (

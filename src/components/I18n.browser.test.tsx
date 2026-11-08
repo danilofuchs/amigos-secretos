@@ -28,6 +28,8 @@ test('formats event information without translating organizer content or changin
         details={{
           occasion: 'Festa da turma',
           date: '2027-03-14',
+          time: '19:30',
+          location: 'Casa da Ana',
           currency: 'USD',
           budget: '25',
           budgetKind: 'max',
@@ -38,7 +40,18 @@ test('formats event information without translating organizer content or changin
   );
   await expect.element(screen.getByRole('heading', { name: 'Lo que acordamos' })).toBeVisible();
   await expect.element(screen.getByText('Bring your favourite book')).toBeVisible();
-  await expect.element(screen.getByText('14 de marzo de 2027')).toBeVisible();
+  await expect
+    .element(
+      screen.getByText(
+        new Intl.DateTimeFormat('es', {
+          dateStyle: 'long',
+          timeStyle: 'short',
+          timeZone: 'UTC',
+        }).format(new Date('2027-03-14T19:30:00Z')),
+      ),
+    )
+    .toBeVisible();
+  await expect.element(screen.getByText('Casa da Ana')).toBeVisible();
   await expect
     .element(
       screen.getByText(

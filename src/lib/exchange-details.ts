@@ -2,8 +2,12 @@
 export const budgetKinds = ['range', 'max', 'min', 'about'] as const;
 export type BudgetKind = (typeof budgetKinds)[number];
 export type ExchangeDetails = {
+  /** Also the raffle's name, shown on the list and on every ticket. */
   occasion: string;
   date: string;
+  /** HH:MM, optional. */
+  time: string;
+  location: string;
   currency: string;
   /** Upper amount (or the only amount for "up to" and "about"). */
   budget: string;
@@ -15,11 +19,19 @@ export type ExchangeDetails = {
 export const emptyDetails: ExchangeDetails = {
   occasion: '',
   date: '',
+  time: '',
+  location: '',
   currency: '',
   budget: '',
   budgetKind: 'range',
   theme: '',
 };
+
+/** Details saved before a field existed read it as empty. */
+export const withDetailDefaults = (details: Partial<ExchangeDetails>): ExchangeDetails => ({
+  ...emptyDetails,
+  ...details,
+});
 
 const AMOUNT = /^\d{1,8}(?:\.\d{1,2})?$/;
 /**

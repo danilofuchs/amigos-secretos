@@ -1,3 +1,4 @@
+import { withDetailDefaults } from './exchange-details';
 import type { ExchangeDetails } from './raffle';
 import { randomBytes } from 'node:crypto';
 import { shortCode } from './codes';
@@ -154,9 +155,9 @@ export async function getTicket(code: string): Promise<{
         name: row.recipient as string,
         title: row.title as string,
         rules: row.rules as string,
-        details: (row.details
-          ? JSON.parse(row.details as string)
-          : { occasion: '', date: '', currency: '', budget: '', theme: '' }) as ExchangeDetails,
+        details: withDetailDefaults(
+          row.details ? (JSON.parse(row.details as string) as Partial<ExchangeDetails>) : {},
+        ),
         drawId: row.draw_id as string,
       }
     : null;

@@ -12,6 +12,7 @@ import {
   budgetKinds,
   emptyDetails,
   normalizeBudget,
+  withDetailDefaults,
   type ExchangeDetails,
 } from './exchange-details';
 export type RaffleInput = {
@@ -98,7 +99,10 @@ export function validateInput(input: unknown): RaffleInput {
     throw new ValidationError('errors.checkExclusions', 'Check the exclusions.');
   let details: ExchangeDetails | undefined;
   if (value.details !== undefined) {
-    const raw = value.details;
+    const raw =
+      value.details && typeof value.details === 'object'
+        ? withDetailDefaults(value.details)
+        : value.details;
     if (
       !raw ||
       typeof raw !== 'object' ||
@@ -116,6 +120,8 @@ export function validateInput(input: unknown): RaffleInput {
     details = normalizeBudget({
       occasion: raw.occasion.trim(),
       date: raw.date,
+      time: raw.time,
+      location: raw.location.trim(),
       currency: raw.currency,
       budget: raw.budget,
       ...(raw.budgetMin === undefined ? {} : { budgetMin: raw.budgetMin }),
@@ -132,6 +138,9 @@ export function validateInput(input: unknown): RaffleInput {
       details.occasion.length > 120 ||
       details.theme.length > 240 ||
       !isCleanText(details.occasion, false) ||
+      details.location.length > 120 ||
+      !isCleanText(details.location, false) ||
+      (details.time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(details.time)) ||
       !isCleanText(details.theme, false) ||
       (details.date &&
         (!/^\d{4}-\d{2}-\d{2}$/.test(details.date) ||

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { InkFilter } from '@/components/InkFilter';
 import { Logo } from '@/components/Logo';
 import { Icon } from '@/components/Icon';
+import { HideWhileCreating } from '@/components/HideWhileCreating';
 import { FooterCreateLink } from '@/components/FooterCreateLink';
 import './globals.css';
 const handwriting = localFont({
@@ -52,13 +53,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Logo />
             <nav aria-label={t('layout.mainMenu', 'Main menu')}>
               <Link href="/sorteios">{t('layout.myExchanges', 'My exchanges')}</Link>
-              <Link className="button nav-create" href="/create">
-                <Icon name="plus" />
-                <span className="nav-create-full">
-                  {t('layout.createExchange', 'Create an exchange')}
-                </span>
-                <span className="nav-create-short">{t('layout.create', 'Create')}</span>
-              </Link>
+              <HideWhileCreating>
+                <Link className="button nav-create" href="/create">
+                  <Icon name="plus" />
+                  <span className="nav-create-full">
+                    {t('layout.createExchange', 'Create an exchange')}
+                  </span>
+                  <span className="nav-create-short">{t('layout.create', 'Create')}</span>
+                </Link>
+              </HideWhileCreating>
             </nav>
           </header>
           {children}
