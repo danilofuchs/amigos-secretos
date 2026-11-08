@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-08T16:32:15.872665+00:00",
+  "title": "Design System: Amigos Secretos",
+  "extensions": {
+    "colorMeta": {
+      "desk": {
+        "role": "neutral",
+        "displayName": "Light Kraft",
+        "tonalRamp": [
+          "oklch(15.00% 0.03298 85.48)",
+          "oklch(26.43% 0.03298 85.48)",
+          "oklch(37.86% 0.03298 85.48)",
+          "oklch(49.29% 0.03298 85.48)",
+          "oklch(60.71% 0.03298 85.48)",
+          "oklch(72.14% 0.03298 85.48)",
+          "oklch(83.57% 0.03298 85.48)",
+          "oklch(95.00% 0.03298 85.48)"
+        ]
+      },
+      "desk-line": {
+        "role": "neutral",
+        "displayName": "Kraft Divider",
+        "tonalRamp": [
+          "oklch(15.00% 0.04242 83.07)",
+          "oklch(26.43% 0.04242 83.07)",
+          "oklch(37.86% 0.04242 83.07)",
+          "oklch(49.29% 0.04242 83.07)",
+          "oklch(60.71% 0.04242 83.07)",
+          "oklch(72.14% 0.04242 83.07)",
+          "oklch(83.57% 0.04242 83.07)",
+          "oklch(95.00% 0.04242 83.07)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Notebook White",
+        "tonalRamp": [
+          "oklch(15.00% 0.00409 91.45)",
+          "oklch(26.43% 0.00409 91.45)",
+          "oklch(37.86% 0.00409 91.45)",
+          "oklch(49.29% 0.00409 91.45)",
+          "oklch(60.71% 0.00409 91.45)",
+          "oklch(72.14% 0.00409 91.45)",
+          "oklch(83.57% 0.00409 91.45)",
+          "oklch(95.00% 0.00409 91.45)"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Ballpoint Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.15243 264.06)",
+          "oklch(26.43% 0.15243 264.06)",
+          "oklch(37.86% 0.15243 264.06)",
+          "oklch(49.29% 0.15243 264.06)",
+          "oklch(60.71% 0.15243 264.06)",
+          "oklch(72.14% 0.15243 264.06)",
+          "oklch(83.57% 0.15243 264.06)",
+          "oklch(95.00% 0.15243 264.06)"
+        ]
+      },
+      "ink-deep": {
+        "role": "primary",
+        "displayName": "Deep Blue Ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.11917 262.54)",
+          "oklch(26.43% 0.11917 262.54)",
+          "oklch(37.86% 0.11917 262.54)",
+          "oklch(49.29% 0.11917 262.54)",
+          "oklch(60.71% 0.11917 262.54)",
+          "oklch(72.14% 0.11917 262.54)",
+          "oklch(83.57% 0.11917 262.54)",
+          "oklch(95.00% 0.11917 262.54)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Graphite Text",
+        "tonalRamp": [
+          "oklch(15.00% 0.02247 264.23)",
+          "oklch(26.43% 0.02247 264.23)",
+          "oklch(37.86% 0.02247 264.23)",
+          "oklch(49.29% 0.02247 264.23)",
+          "oklch(60.71% 0.02247 264.23)",
+          "oklch(72.14% 0.02247 264.23)",
+          "oklch(83.57% 0.02247 264.23)",
+          "oklch(95.00% 0.02247 264.23)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Soft Graphite",
+        "tonalRamp": [
+          "oklch(15.00% 0.01570 262.33)",
+          "oklch(26.43% 0.01570 262.33)",
+          "oklch(37.86% 0.01570 262.33)",
+          "oklch(49.29% 0.01570 262.33)",
+          "oklch(60.71% 0.01570 262.33)",
+          "oklch(72.14% 0.01570 262.33)",
+          "oklch(83.57% 0.01570 262.33)",
+          "oklch(95.00% 0.01570 262.33)"
+        ]
+      },
+      "rule": {
+        "role": "secondary",
+        "displayName": "Ruled Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.03760 258.37)",
+          "oklch(26.43% 0.03760 258.37)",
+          "oklch(37.86% 0.03760 258.37)",
+          "oklch(49.29% 0.03760 258.37)",
+          "oklch(60.71% 0.03760 258.37)",
+          "oklch(72.14% 0.03760 258.37)",
+          "oklch(83.57% 0.03760 258.37)",
+          "oklch(95.00% 0.03760 258.37)"
+        ]
+      },
+      "margin": {
+        "role": "secondary",
+        "displayName": "Notebook Red",
+        "tonalRamp": [
+          "oklch(15.00% 0.07615 20.07)",
+          "oklch(26.43% 0.07615 20.07)",
+          "oklch(37.86% 0.07615 20.07)",
+          "oklch(49.29% 0.07615 20.07)",
+          "oklch(60.71% 0.07615 20.07)",
+          "oklch(72.14% 0.07615 20.07)",
+          "oklch(83.57% 0.07615 20.07)",
+          "oklch(95.00% 0.07615 20.07)"
+        ]
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Dry Red Ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.12576 28.79)",
+          "oklch(26.43% 0.12576 28.79)",
+          "oklch(37.86% 0.12576 28.79)",
+          "oklch(49.29% 0.12576 28.79)",
+          "oklch(60.71% 0.12576 28.79)",
+          "oklch(72.14% 0.12576 28.79)",
+          "oklch(83.57% 0.12576 28.79)",
+          "oklch(95.00% 0.12576 28.79)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Written page heading",
+        "purpose": "Caveat page headings; context-specific sizes documented in DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Written section heading",
+        "purpose": "Notebook and paper section titles."
+      },
+      "written-name": {
+        "displayName": "Participant name",
+        "purpose": "Accessible written labels beside settled participant packets; 22px on phones."
+      },
+      "revealed-name": {
+        "displayName": "Private recipient",
+        "purpose": "CSS fallback name size. The physical strip fits its textured name to one or two ruled baselines and overlays matching transparent selectable text."
+      },
+      "body": {
+        "displayName": "Functional copy",
+        "purpose": "Legible instructions and interface copy."
+      },
+      "label": {
+        "displayName": "Field label",
+        "purpose": "Public Sans field labels, separate from decorative writing."
+      },
+      "button": {
+        "displayName": "Action label",
+        "purpose": "Primary and secondary button text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper",
+        "value": "2px 8px 9px rgb(64 53 38 / 12%)",
+        "purpose": "Outer drop-shadow around torn sheets."
+      },
+      {
+        "name": "sharing-slip",
+        "value": "1px 3px 3px rgb(53 47 35 / 14%)",
+        "purpose": "Loose shared name slips."
+      },
+      {
+        "name": "participant-packet",
+        "value": "1px 3px 3px rgb(53 47 35 / 18%)",
+        "purpose": "Static participant packet after settling."
+      },
+      {
+        "name": "ticket-fallback",
+        "value": "2px 6px 7px rgb(64 53 38 / 18%)",
+        "purpose": "CSS-only reveal fallback."
+      },
+      {
+        "name": "physical-ticket-floor",
+        "value": "ShadowMaterial({ color: 0x4a361c, opacity: .2 })",
+        "purpose": "Soft PCF shadows beneath hinged 3D paper on the transparent kraft scene."
+      }
+    ],
+    "motion": [
+      {
+        "name": "reveal-spring",
+        "value": "stiffness 64; damping 2 * sqrt(64)",
+        "purpose": "Critically damped progress animation carrying release velocity and retargeting during motion."
+      },
+      {
+        "name": "participant-tear",
+        "value": "300–430ms; cubic-bezier(.3, .7, .2, 1)",
+        "purpose": "ID-seeded tear with small drift and rotation."
+      },
+      {
+        "name": "participant-first-fold",
+        "value": "420–600ms; cubic-bezier(.5, .05, .25, 1)",
+        "purpose": "Half hinge closes the strip."
+      },
+      {
+        "name": "participant-second-fold",
+        "value": "380–540ms; cubic-bezier(.45, .05, .3, 1)",
+        "purpose": "Quarter and inner hinges close together."
+      },
+      {
+        "name": "participant-settle",
+        "value": "260–380ms; cubic-bezier(.3, 1.4, .5, 1)",
+        "purpose": "Scale to .8 and apply seeded packet tilt, then replace animated geometry with static layers."
+      },
+      {
+        "name": "participant-stagger",
+        "value": "min(85ms, 1100ms / count) + 0–170ms seeded jitter",
+        "purpose": "New batch members move independently; existing members never replay."
+      },
+      {
+        "name": "control-transition",
+        "value": "160ms",
+        "purpose": "Button background and shadow."
+      },
+      {
+        "name": "copy-confirmation",
+        "value": "2500ms",
+        "purpose": "Inline checkmark and Copiada label before resetting the same button."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "instant spring targets; 1ms CSS animations; no transitions",
+        "purpose": "Keep end states and completion callbacks without physical motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "small-phone",
+        "value": "390px"
+      },
+      {
+        "name": "stacked",
+        "value": "650px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "850px"
+      },
+      {
+        "name": "shell",
+        "value": "1120px"
+      },
+      {
+        "name": "wide",
+        "value": "1400px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main next step in organizing a raffle.",
+      "html": "<button class=\"ds-primary\">Criar sorteio</button>",
+      "css": ".ds-primary{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:44px;padding:11px 19px;border:1px solid transparent;border-radius:4px;font-size:13px;font-weight:550;line-height:1.5;cursor:pointer;transition:background 160ms,box-shadow 160ms;background:var(--ink,#2146a0);color:#fff}.ds-primary:hover{background:var(--ink-deep,#173779);box-shadow:0 3px 8px rgb(31 63 136 / 12%)}.ds-primary:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:5px;}.ds-primary:active{background:#102c68}.ds-primary:disabled{background:#c2c5c9;color:#4d525c;box-shadow:none;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action alongside the main step.",
+      "html": "<button class=\"ds-secondary\">Adicionar</button>",
+      "css": ".ds-secondary{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:44px;padding:11px 19px;border:1px solid transparent;border-radius:4px;font-size:13px;font-weight:550;line-height:1.5;cursor:pointer;transition:background 160ms,box-shadow 160ms;background:transparent;color:var(--ink,#2146a0);border-color:#7f8caa}.ds-secondary:hover{background:#d8dfec}.ds-secondary:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:5px;}.ds-secondary:active{background:#d8dfec}.ds-secondary:disabled{background:transparent;border-color:#a8a9a7;color:#656a73;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+    },
+    {
+      "name": "Code Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A legible functional field on the kraft backing.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-code\">Código do bilhete</label><input class=\"ds-field\" id=\"ds-code\" placeholder=\"Cole o código aqui\"/>",
+      "css": ".ds-field-label{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:block;font-size:12px;line-height:1.5;font-weight:550;margin-bottom:8px;color:var(--text,#353b47)}.ds-field{font-family:var(--font-ui,\"Public Sans\"),sans-serif;width:100%;min-width:0;color:var(--ink,#2146a0);background:var(--paper,#fffefb);border:1px solid #8e96a5;border-radius:3px;padding:11px 13px;font-size:14px;caret-color:var(--ink,#2146a0)}.ds-field::placeholder{color:#697b9e;opacity:1}.ds-field:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:3px}.ds-field:disabled{opacity:.8}"
+    },
+    {
+      "name": "Name Entry",
+      "kind": "input",
+      "refersTo": "name-entry",
+      "description": "White ruled paper stays intact while only handwriting gets pigment skips.",
+      "html": "<svg width=\"0\" height=\"0\" aria-hidden=\"true\" style=\"position:absolute\"><defs><filter id=\"ds-ballpoint\" x=\"-3%\" y=\"-5%\" width=\"106%\" height=\"110%\" color-interpolation-filters=\"sRGB\"><feTurbulence type=\"fractalNoise\" baseFrequency=\".11 .72\" numOctaves=\"3\" seed=\"12\" stitchTiles=\"stitch\" result=\"fiber\"/><feColorMatrix in=\"fiber\" type=\"matrix\" values=\"0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  22 0 0 0 -7\" result=\"coverage\"/><feComponentTransfer in=\"coverage\" result=\"soft-coverage\"><feFuncA type=\"linear\" slope=\".35\" intercept=\".65\"/></feComponentTransfer><feComposite in=\"SourceGraphic\" in2=\"soft-coverage\" operator=\"in\" result=\"ink\"/><feTurbulence type=\"fractalNoise\" baseFrequency=\".008 .075\" numOctaves=\"2\" seed=\"5\" result=\"pressure\"/><feColorMatrix in=\"pressure\" type=\"matrix\" values=\"0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .7 0 0 0 .6\" result=\"pressure-alpha\"/><feComposite in=\"ink\" in2=\"pressure-alpha\" operator=\"in\"/></filter></defs></svg><div class=\"ds-name-entry\"><textarea class=\"ds-name-text\" aria-label=\"Quem vai participar?\" rows=\"3\">Ana\nBruno\nCarla</textarea></div>",
+      "css": ".ds-name-entry{transform:rotate(.4deg);background-color:var(--paper,#fffefb);background-image:repeating-linear-gradient(0deg,transparent 0,transparent 29px,var(--rule,#c4d4ec) 29px,var(--rule,#c4d4ec) 30px);background-position:0 9px;filter:drop-shadow(2px 8px 9px rgb(64 53 38 / 12%))}.ds-name-entry:focus-within{outline:2px solid var(--ink,#2146a0);outline-offset:3px}.ds-name-text{font-family:var(--font-handwriting,\"Caveat\"),cursive;display:block;width:100%;min-height:111px;padding:10px 17px;border:0;border-radius:0;background:transparent;color:var(--ink,#2146a0);font-size:25px;line-height:30px;filter:url(#ds-ballpoint);resize:vertical}.ds-name-text:focus-visible{outline:none}@media(prefers-contrast:more){.ds-name-text{filter:none}}"
+    },
+    {
+      "name": "Participant Packet",
+      "kind": "custom",
+      "refersTo": "name-slip",
+      "description": "Settled packet with a readable independent label; only newly added participants run the tear-and-fold sequence.",
+      "html": "<svg width=\"0\" height=\"0\" aria-hidden=\"true\" style=\"position:absolute\"><defs><filter id=\"ds-ballpoint\" x=\"-3%\" y=\"-5%\" width=\"106%\" height=\"110%\" color-interpolation-filters=\"sRGB\"><feTurbulence type=\"fractalNoise\" baseFrequency=\".11 .72\" numOctaves=\"3\" seed=\"12\" stitchTiles=\"stitch\" result=\"fiber\"/><feColorMatrix in=\"fiber\" type=\"matrix\" values=\"0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  22 0 0 0 -7\" result=\"coverage\"/><feComponentTransfer in=\"coverage\" result=\"soft-coverage\"><feFuncA type=\"linear\" slope=\".35\" intercept=\".65\"/></feComponentTransfer><feComposite in=\"SourceGraphic\" in2=\"soft-coverage\" operator=\"in\" result=\"ink\"/><feTurbulence type=\"fractalNoise\" baseFrequency=\".008 .075\" numOctaves=\"2\" seed=\"5\" result=\"pressure\"/><feColorMatrix in=\"pressure\" type=\"matrix\" values=\"0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .7 0 0 0 .6\" result=\"pressure-alpha\"/><feComposite in=\"ink\" in2=\"pressure-alpha\" operator=\"in\"/></filter></defs></svg><div class=\"ds-packet-row\"><div class=\"ds-packet-paper\" aria-hidden=\"true\"><div class=\"ds-packet-under\"></div><div class=\"ds-packet-back\"></div></div><span class=\"ds-packet-label\">Marina</span><button class=\"ds-packet-remove\" aria-label=\"Remover Marina\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button></div>",
+      "css": ".ds-packet-row{position:relative;display:flex;align-items:center;gap:4px;min-height:58px;padding:5px 4px 5px calc(20% + 12px)}.ds-packet-paper{position:absolute;left:0;right:0;top:calc(50% - 29px);height:58px;z-index:1;pointer-events:none;transform-origin:0 50%;transform:rotate(-2deg) scale(.8);filter:drop-shadow(1px 3px 3px rgb(53 47 35 / 18%))}.ds-packet-under,.ds-packet-back{position:absolute;top:0;bottom:0;left:0;width:25%;clip-path:polygon(0 0.45%, 1.5% 0, 3% 0.35%, 5% 0.1%, 7% 0.5%, 10% 0.25%, 14% 0.4%, 18% 0, 22% 0.3%, 27% 0.15%, 33% 0.5%, 38% 0, 45% 0.3%, 51% 0.15%, 57% 0.35%, 65% 0, 72% 0.4%, 78% 0.2%, 84% 0, 91% 0.3%, 97% 0.1%, 100% 0.3%, 99.8% 12%, 100% 23%, 99.75% 36%, 100% 48%, 99.8% 61%, 100% 72%, 99.7% 87%, 100% 99.4%, 98.5% 99.8%, 96.7% 99.3%, 94.4% 100%, 92.3% 99.5%, 89.5% 99.9%, 87.3% 99.2%, 84.7% 99.7%, 82% 99.3%, 78.6% 100%, 76% 99.4%, 72.5% 99.8%, 70.6% 99.1%, 68.4% 99.7%, 65.8% 99.4%, 62% 99.9%, 59.4% 99.2%, 57% 99.6%, 53.5% 99.4%, 49.9% 100%, 47.7% 99.6%, 44.2% 99.8%, 41.3% 99.1%, 38.7% 99.7%, 35% 99.3%, 32.5% 99.9%, 29.3% 99.4%, 26.6% 99.8%, 24.1% 99.2%, 21% 99.7%, 18.8% 99.4%, 15.1% 100%, 12% 99.4%, 9.5% 99.8%, 6.6% 99.2%, 4.4% 99.7%, 2% 99.4%, 0 99.7%, 0.3% 86%, 0 73%, 0.2% 61%, 0 47%, 0.25% 35%, 0 22%, 0.2% 10%)}.ds-packet-under{background:linear-gradient(178deg,#fffefb 40%,#f1efe9)}.ds-packet-back{background:linear-gradient(90deg,#f6f3ec,#fffefb 45%,#f4f1ea);box-shadow:inset -2px 0 3px -2px rgb(80 68 48 / 28%)}.ds-packet-label{position:relative;flex:1;min-width:0;font-family:var(--font-handwriting,\"Caveat\"),cursive;font-size:26px;font-weight:500;line-height:1.05;overflow-wrap:anywhere;color:var(--ink,#2146a0);filter:url(#ds-ballpoint)}.ds-packet-remove{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;width:32px;height:40px;border:0;border-radius:3px;background:transparent;color:var(--ink,#2146a0);cursor:pointer}.ds-packet-remove:hover{background:#dbe3f1}.ds-packet-remove:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:5px}@media(pointer:coarse){.ds-packet-remove{min-width:44px;min-height:44px}}@media(max-width:650px){.ds-packet-row{padding-left:calc(20% + 9px)}.ds-packet-label{font-size:22px}}@media(prefers-contrast:more){.ds-packet-label{filter:none}}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Quiet functional navigation beside the handwritten wordmark.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Menu principal\"><a class=\"ds-nav-list\" href=\"#sorteios\">Meus sorteios</a><a class=\"ds-nav-create\" href=\"#create\">Criar sorteio</a></nav>",
+      "css": ".ds-nav{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:flex;align-items:center;gap:28px}.ds-nav-list{font-size:12px;color:var(--text,#353b47);text-decoration:none}.ds-nav-list:hover{color:var(--ink,#2146a0);text-decoration:underline;text-underline-offset:5px}.ds-nav-create{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border:1px solid #818a99;border-radius:4px;color:var(--ink,#2146a0);font-size:12px;font-weight:550;line-height:1.5;text-decoration:none}.ds-nav-create:hover{background:rgb(255 254 251 / 35%)}.ds-nav a:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:5px;}@media(max-width:390px){.ds-nav{width:100%;justify-content:space-between;gap:18px}}@media(pointer:coarse){.ds-nav-create{min-height:44px}}"
+    },
+    {
+      "name": "Raffle Status",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "A quiet status dot accompanies the written raffle title.",
+      "html": "<span class=\"ds-badge\">Rascunho</span><span class=\"ds-badge ds-badge-drawn\">Sorteado</span>",
+      "css": ".ds-badge{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:inline-flex;gap:6px;align-items:center;margin-right:16px;font-size:10px;color:var(--muted,#5b6069);white-space:nowrap}.ds-badge::before{content:\"\";width:5px;height:5px;background:#8b877b;border-radius:50%}.ds-badge-drawn{color:var(--ink,#2146a0)}.ds-badge-drawn::before{background:var(--ink,#2146a0)}"
+    },
+    {
+      "name": "Ruled Notebook Sheet",
+      "kind": "card",
+      "refersTo": "notebook",
+      "description": "The white ruled writing surface; rings and shadow stay outside the torn page.",
+      "html": "<div class=\"ds-notebook-wrap\"><div class=\"ds-rings ds-rings-back\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><section class=\"ds-notebook\"><h2 class=\"ds-notebook-title\">Nossos combinados</h2><label class=\"ds-notebook-label\" for=\"ds-title\">Nome do sorteio</label><input id=\"ds-title\" class=\"ds-notebook-input\" value=\"Amigo secreto da turma\"/></section><div class=\"ds-rings ds-rings-front\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>",
+      "css": ".ds-notebook-wrap{filter:drop-shadow(2px 8px 9px rgb(64 53 38 / 12%))}.ds-notebook{background-color:var(--paper,#fffefb);background-image:linear-gradient(90deg,transparent 44px,var(--margin,#d79897) 44px,var(--margin,#d79897) 45px,transparent 45px),repeating-linear-gradient(0deg,transparent 0,transparent 31px,var(--rule,#c4d4ec) 31px,var(--rule,#c4d4ec) 32px);background-position:0 0,0 13px;padding:30px 28px 29px 66px;clip-path:polygon(0 0.45%, 1.5% 0, 3% 0.35%, 5% 0.1%, 7% 0.5%, 10% 0.25%, 14% 0.4%, 18% 0, 22% 0.3%, 27% 0.15%, 33% 0.5%, 38% 0, 45% 0.3%, 51% 0.15%, 57% 0.35%, 65% 0, 72% 0.4%, 78% 0.2%, 84% 0, 91% 0.3%, 97% 0.1%, 100% 0.3%, 99.8% 12%, 100% 23%, 99.75% 36%, 100% 48%, 99.8% 61%, 100% 72%, 99.7% 87%, 100% 99.4%, 98.5% 99.8%, 96.7% 99.3%, 94.4% 100%, 92.3% 99.5%, 89.5% 99.9%, 87.3% 99.2%, 84.7% 99.7%, 82% 99.3%, 78.6% 100%, 76% 99.4%, 72.5% 99.8%, 70.6% 99.1%, 68.4% 99.7%, 65.8% 99.4%, 62% 99.9%, 59.4% 99.2%, 57% 99.6%, 53.5% 99.4%, 49.9% 100%, 47.7% 99.6%, 44.2% 99.8%, 41.3% 99.1%, 38.7% 99.7%, 35% 99.3%, 32.5% 99.9%, 29.3% 99.4%, 26.6% 99.8%, 24.1% 99.2%, 21% 99.7%, 18.8% 99.4%, 15.1% 100%, 12% 99.4%, 9.5% 99.8%, 6.6% 99.2%, 4.4% 99.7%, 2% 99.4%, 0 99.7%, 0.3% 86%, 0 73%, 0.2% 61%, 0 47%, 0.25% 35%, 0 22%, 0.2% 10%)}.ds-notebook-title{font-family:var(--font-handwriting,\"Caveat\"),cursive;font-size:39px;font-weight:500;line-height:48px;margin:0 0 23px;color:var(--ink,#2146a0);transform:rotate(-1deg)}.ds-notebook-label{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:inline-block;background:var(--paper,#fffefb);box-shadow:5px 0 var(--paper,#fffefb),-5px 0 var(--paper,#fffefb);color:#515968;font-size:12px;font-weight:550;line-height:1.5;margin-bottom:8px}.ds-notebook-input{font-family:var(--font-handwriting,\"Caveat\"),cursive;width:100%;min-width:0;background:transparent;border:0;border-radius:0;padding:0 0 2px;color:var(--ink,#2146a0);font-size:28px;font-weight:500;line-height:32px}.ds-notebook-input:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:3px}.ds-notebook-wrap{position:relative;isolation:isolate;margin-left:6px}.ds-notebook{position:relative;z-index:1;min-height:260px}.ds-rings{position:absolute;left:-13px;top:29px;bottom:25px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}.ds-rings i{width:31px;height:14px;border-radius:50%;transform:rotate(-10deg)}.ds-rings-back{z-index:0}.ds-rings-back i{border:3px solid #7d7d76;border-right-color:#d4d3ca;border-top-color:#a7a69e;box-shadow:0 2px 2px rgb(56 52 45 / 24%)}.ds-rings-front{z-index:2}.ds-rings-front i{position:relative}.ds-rings-front i::before{content:\"\";position:absolute;inset:0;border-radius:50%;border:3px solid #7d7d76;border-right-color:#d4d3ca;border-top-color:#a7a69e;box-shadow:0 2px 2px rgb(56 52 45 / 24%);clip-path:inset(46% -4px -5px -4px)}.ds-rings-front i::after{content:\"\";position:absolute;right:-1px;top:4px;width:6px;height:6px;border-radius:50%;background:#6b685f;box-shadow:inset 0 1px 2px #3e3d36,0 0 0 1px #f1eee5}"
+    },
+    {
+      "name": "Two-Fold Ticket Fallback",
+      "kind": "custom",
+      "refersTo": "folded-ticket",
+      "description": "Closed quarter-width CSS fallback material preview; production uses dynamic Three.js physical UV geometry and the same two-step reveal.",
+      "html": "<div class=\"ds-strip-scene\"><div class=\"ds-strip-measure\"><div class=\"ds-strip-flat\"></div></div><button type=\"button\" class=\"ds-strip-hit\" aria-label=\"Abrir dobra 1 de 2\"></button></div>",
+      "css": ".ds-strip-scene{height:230px;width:100%;position:relative}.ds-strip-measure{position:absolute;top:50%;left:50%;width:clamp(160px,calc(100% - 32px),420px);aspect-ratio:3.9;transform:translate(-50%,-50%) rotate(-1.43deg)}.ds-strip-flat{width:25%;height:100%;margin:auto;background:var(--paper,#fffefb) linear-gradient(transparent 33%,#b3c5e4 33%,#b3c5e4 calc(33% + 1px),transparent calc(33% + 1px),transparent 68%,#b3c5e4 68%,#b3c5e4 calc(68% + 1px),transparent calc(68% + 1px));clip-path:polygon(0 0.45%, 1.5% 0, 3% 0.35%, 5% 0.1%, 7% 0.5%, 10% 0.25%, 14% 0.4%, 18% 0, 22% 0.3%, 27% 0.15%, 33% 0.5%, 38% 0, 45% 0.3%, 51% 0.15%, 57% 0.35%, 65% 0, 72% 0.4%, 78% 0.2%, 84% 0, 91% 0.3%, 97% 0.1%, 100% 0.3%, 99.8% 12%, 100% 23%, 99.75% 36%, 100% 48%, 99.8% 61%, 100% 72%, 99.7% 87%, 100% 99.4%, 98.5% 99.8%, 96.7% 99.3%, 94.4% 100%, 92.3% 99.5%, 89.5% 99.9%, 87.3% 99.2%, 84.7% 99.7%, 82% 99.3%, 78.6% 100%, 76% 99.4%, 72.5% 99.8%, 70.6% 99.1%, 68.4% 99.7%, 65.8% 99.4%, 62% 99.9%, 59.4% 99.2%, 57% 99.6%, 53.5% 99.4%, 49.9% 100%, 47.7% 99.6%, 44.2% 99.8%, 41.3% 99.1%, 38.7% 99.7%, 35% 99.3%, 32.5% 99.9%, 29.3% 99.4%, 26.6% 99.8%, 24.1% 99.2%, 21% 99.7%, 18.8% 99.4%, 15.1% 100%, 12% 99.4%, 9.5% 99.8%, 6.6% 99.2%, 4.4% 99.7%, 2% 99.4%, 0 99.7%, 0.3% 86%, 0 73%, 0.2% 61%, 0 47%, 0.25% 35%, 0 22%, 0.2% 10%);filter:drop-shadow(2px 6px 7px rgb(64 53 38 / 18%));transition:width .2s}.ds-strip-hit{position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;padding:0;cursor:grab;touch-action:pan-y;user-select:none}.ds-strip-hit:active{cursor:grabbing}.ds-strip-hit:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:-6px}@media(max-width:650px){.ds-strip-scene{height:200px}}@media(prefers-reduced-motion:reduce){.ds-strip-flat{transition:none}}"
+    },
+    {
+      "name": "Copy Confirmation",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Confirmed state inside the same copy button for 2.5 seconds; no new layout row.",
+      "html": "<button class=\"ds-copy ds-secondary\" aria-label=\"Mensagem de Marina copiada\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg><span>Copiada</span></button>",
+      "css": ".ds-secondary{font-family:var(--font-ui,\"Public Sans\"),sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:44px;padding:11px 19px;border:1px solid transparent;border-radius:4px;font-size:13px;font-weight:550;line-height:1.5;cursor:pointer;transition:background 160ms,box-shadow 160ms;background:transparent;color:var(--ink,#2146a0);border-color:#7f8caa}.ds-secondary:hover{background:#d8dfec}.ds-secondary:focus-visible{outline:2px solid var(--ink,#2146a0);outline-offset:5px;}.ds-secondary:active{background:#d8dfec}.ds-secondary:disabled{background:transparent;border-color:#a8a9a7;color:#656a73;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}.ds-copy{min-width:158px;min-height:40px;padding:9px 13px;gap:8px;font-size:12px}@media(max-width:650px){.ds-copy{min-width:0;flex:1}}@media(pointer:coarse){.ds-copy{min-height:44px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "O ritual do papelzinho",
+    "overview": "Notebook pages and loose slips make the familiar amigo secreto ritual tangible: write with a blue ballpoint pen, tear a horizontal strip by hand, fold it twice along vertical creases and open it to discover a name. The material world is light kraft with visible fibers, near-white ruled paper and imperfect blue writing. Shadows, creases and small rotations describe actual pieces of paper.\n\nCaveat carries handwriting; Public Sans keeps controls and instructions clear. Copy is direct, conversational Brazilian Portuguese. The organizer works on an open notebook, while the recipient gets a focused paper interaction. The confirmed background is pale, desaturated kraft; gray and orange backing are rejected.",
+    "keyCharacteristics": [
+      "Light kraft backing with visible natural fibers.",
+      "White ruled notebook paper, a red margin and jagged hand-torn edges.",
+      "Subtle blue ballpoint coverage with small pigment skips and pressure variation.",
+      "Two deliberate opening steps with touch, tap and keyboard access.",
+      "Plain pt-BR instructions and legible Public Sans controls."
+    ],
+    "rules": [
+      {
+        "name": "The Light Kraft Rule",
+        "body": "Keep the photographic fibers visible under the light overlay. Preserve the pale, desaturated backing chosen by the user.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Boundary Rule",
+        "body": "Apply pigment loss to the writing, keeping paper fills and ruling on unfiltered wrappers. Disable ink filtering when more contrast is requested, or on the specific lettering being selected.",
+        "section": "typography"
+      },
+      {
+        "name": "The Physical Paper Rule",
+        "body": "Use creases, torn silhouettes, layered sheet edges and ambient shadows to explain the paper object and its state.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep kraft light and visibly fibrous behind near-white paper.",
+      "Do use Caveat for written names and Public Sans for functional labels and instructions.",
+      "Do keep paper backgrounds outside the ballpoint filter.",
+      "Do preserve both vertical folds, with tap and keyboard alternatives to dragging.",
+      "Do retain visible focus, live status messages, reduced-motion handling and coarse-pointer targets.",
+      "Do write concrete, conversational Brazilian Portuguese."
+    ],
+    "donts": [
+      "Don't replace the chosen backing with gray or orange kraft.",
+      "Don't replace the paper ritual with gift mascots, generic dashboard cards, serif marketing headings or eyebrow labels.",
+      "Don't make vibration or dragging necessary to reveal a name.",
+      "Don't imply that opening WhatsApp confirms delivery; the sent checkbox is local to the current screen.",
+      "Don't treat the paper as a rounded app card or apply ink failures to its surface."
+    ]
+  }
+}

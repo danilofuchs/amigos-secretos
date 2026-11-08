@@ -1,40 +1,73 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { twMerge } from "tailwind-merge";
-import "./globals.css";
-import snowflake from "./snowflake.module.scss";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Elefante Branco",
-  description: "O melhor amigo secreto do mundo",
-  metadataBase:
-    process.env.NODE_ENV === "development"
-      ? new URL("http://localhost:3600")
-      : new URL("https://elefantebranco.vercel.app"),
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { getI18n } from '@/lib/i18n/server';
+import { I18nProvider, LanguagePicker } from '@/components/I18nProvider';
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import Link from 'next/link';
+import { InkFilter } from '@/components/InkFilter';
+import { Logo } from '@/components/Logo';
+import { Icon } from '@/components/Icon';
+import { FooterCreateLink } from '@/components/FooterCreateLink';
+import './globals.css';
+const handwriting = localFont({
+  src: '../../public/fonts/caveat.ttf',
+  variable: '--font-handwriting',
+  weight: '400 700',
+  display: 'swap',
+});
+const ui = localFont({
+  src: '../../public/fonts/public-sans.ttf',
+  variable: '--font-ui',
+  weight: '100 900',
+  display: 'swap',
+});
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return {
+    title: {
+      default: t(
+        'layout.amigosSecretosDrawNames',
+        'Amigos Secretos | Draw names and send secret slips',
+      ),
+      template: '%s · Amigos Secretos',
+    },
+    description: t(
+      'layout.writeNamesAgreeRules',
+      'Write the names, agree on the rules and send everyone a secret slip.',
+    ),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://amigossecretos.vercel.app'),
+    icons: { icon: '/icon.svg', apple: '/icon.svg' },
+  };
+}
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { locale, t } = await getI18n();
   return (
-    <html lang="en">
-      <body className={twMerge(inter.className, "min-h-screen relative")}>
-        {children}
-        <div className="min-h-screen w-full h-full overflow-hidden fixed top-0 pointer-events-none">
-          {Array.from({ length: 150 }).map((_, i) => (
-            <div
-              key={i}
-              className={twMerge(
-                snowflake.snowflake,
-                i > 75 ? "hidden lg:inline" : ""
-              )}
-            />
-          ))}
-        </div>
+    <html lang={locale} className={`${handwriting.variable} ${ui.variable}`}>
+      <body>
+        <I18nProvider locale={locale}>
+          <InkFilter />
+          <a className="skip-link" href="#main">
+            {t('layout.skipContent', 'Skip to content')}
+          </a>
+          <header className="site-header">
+            <Logo />
+            <nav aria-label={t('layout.mainMenu', 'Main menu')}>
+              <Link href="/sorteios">{t('layout.myExchanges', 'My exchanges')}</Link>
+              <Link className="button nav-create" href="/create">
+                <Icon name="plus" />
+                <span className="nav-create-full">
+                  {t('layout.createExchange', 'Create an exchange')}
+                </span>
+                <span className="nav-create-short">{t('layout.create', 'Create')}</span>
+              </Link>
+            </nav>
+          </header>
+          {children}
+          <footer className="site-footer">
+            <p>Amigos Secretos</p>
+            <LanguagePicker />
+            <FooterCreateLink />
+          </footer>
+        </I18nProvider>
       </body>
     </html>
   );

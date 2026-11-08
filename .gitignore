@@ -34,3 +34,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local raffle database
+.data/
+.env
+
+# Local design QA captures
+.impeccable/review/
+
+# Browser test artifacts
+/test-results/
+/playwright-report/
+
+# Vitest browser failure attachments
+.vitest/

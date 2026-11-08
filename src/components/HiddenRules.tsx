@@ -1,31 +1,59 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
-
-export function HiddenRules() {
-  const [hidden, setHidden] = useState<boolean>(true);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setHidden(false);
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
+'use client';
+import { formatBudget } from '@/lib/i18n';
+import type { ExchangeDetails } from '@/lib/raffle';
+import { useI18n } from '@/components/I18nContext';
+export function HiddenRules({ rules, details }: { rules: string; details?: ExchangeDetails }) {
+  const { t, locale } = useI18n();
   return (
-    <div
-      className={twMerge(
-        "w-full mt-72 text-start transition-all delay-[2200ms] duration-1000",
-        hidden && "opacity-0"
-      )}
-    >
-      <h3 className="font-medium text-lg">Regras</h3>
-      <ul className="list-disc list-inside">
-        <li>Troca de meias dia 20/12</li>
-        <li>R$ 20,00</li>
-      </ul>
-    </div>
+    <section className="rules paper-shadow">
+      <div className="rules-sheet torn-paper">
+        <h2>{t('hiddenRules.whatWeAgreed', 'What we agreed')}</h2>
+        {details && (
+          <dl className="exchange-summary">
+            {details.occasion && (
+              <>
+                <dt>{t('hiddenRules.occasion', 'Occasion')}</dt>
+                <dd>{details.occasion}</dd>
+              </>
+            )}
+            {details.date && (
+              <>
+                <dt>{t('hiddenRules.exchangeDate', 'Exchange date')}</dt>
+                <dd>
+                  {new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
+                    new Date(`${details.date}T12:00:00Z`),
+                  )}
+                </dd>
+              </>
+            )}
+            {formatBudget(locale, details) && (
+              <>
+                <dt>{t('hiddenRules.budgetPerGift', 'Budget per gift')}</dt>
+                <dd>{formatBudget(locale, details)}</dd>
+              </>
+            )}
+            {details.theme && (
+              <>
+                <dt>{t('hiddenRules.giftTheme', 'Gift theme')}</dt>
+                <dd>{details.theme}</dd>
+              </>
+            )}
+          </dl>
+        )}
+        <p className="preserve-lines handwritten">
+          {rules ||
+            t(
+              'hiddenRules.organizerHasntAddedDetails',
+              "The organizer hasn't added the details yet.",
+            )}
+        </p>
+        <p className="hint">
+          {t(
+            'hiddenRules.organizerCanUpdateThese',
+            'The organizer can update these details. Check again before the exchange.',
+          )}{' '}
+        </p>
+      </div>
+    </section>
   );
 }

@@ -1,0 +1,72 @@
+.wrap {
+  position: relative;
+  display: block;
+}
+.wrap > .field {
+  display: block;
+}
+.wrap .field.field::placeholder {
+  color: #5c5f66;
+  font-weight: 400;
+}
+.wrap .field.pencil {
+  color: #5c5f66;
+}
+.copy {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0 solid transparent;
+  pointer-events: none;
+}
+.ink {
+  display: block;
+  color: var(--ink);
+  white-space: pre;
+  filter: url(#ballpoint-ink);
+}
+.wrapLines {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.wrap > .field {
+  position: relative;
+  z-index: 1;
+}
+/* The tilt goes on boxes of the same size, so the drawing ink and the finished field pivot alike. */
+.wrap .field.inked,
+.copy {
+  transform: rotate(var(--pen-tilt, 0deg)) translateY(var(--pen-shift, 0px));
+  transform-origin: left center;
+}
+.wrap .field.inked,
+.copy .ink {
+  letter-spacing: var(--pen-spacing, 0);
+}
+/* The erased pencil draft, left in place under the pen: faint, as an eraser leaves it. */
+.ghost {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0 solid transparent;
+  color: #5c5f66;
+  pointer-events: none;
+  filter: url(#ballpoint-ink);
+  opacity: 0;
+  animation: erase 30s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.oneLine {
+  display: block;
+  white-space: pre;
+}
+@keyframes erase {
+  from {
+    opacity: 1;
+  }
+  2.5% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 0.11;
+  }
+}

@@ -1,88 +1,29 @@
-"use client";
-
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { useActionState, useState } from "react";
-import { createRaffle } from "./actions";
-
-export default function CreatePage() {
-  const [names, setNames] = useState<string[]>([]);
-  const [name, setName] = useState<string>("");
-
-  const [state, dispatch] = useActionState(createRaffle, { type: undefined });
-
+import { getI18n } from '@/lib/i18n/server';
+import { RaffleForm } from '@/components/RaffleForm';
+import Link from 'next/link';
+import { Icon } from '@/components/Icon';
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t('create.createExchange', 'Create an exchange') };
+}
+export default async function CreatePage() {
+  const { t, currency } = await getI18n();
   return (
-    <main className="p-4 flex flex-col gap-10 max-w-xl mx-auto pt-56">
-      <h1 className="text-4xl font-bold text-center">Elefante Branco</h1>
-      <h2 className="text-xl font-medium text-center">
-        Quem está participando?
-      </h2>
-      <ul className="list-disc list-inside">
-        {names.map((name, i) => (
-          <li key={"name_" + i}>{name}</li>
-        ))}
-      </ul>
-      <form
-        className="flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setNames((names) => [...names, name]);
-          setName("");
-        }}
-      >
-        <Input
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          minLength={4}
-          onPaste={(e) => {
-            const text = e.clipboardData.getData("text/plain");
-            const names = text.split("\n");
-            setNames((prevNames) => [...prevNames, ...names]);
-            setName("");
-          }}
-        />
-        <Button type="submit">Adicionar</Button>
-      </form>
-
-      <form action={dispatch}>
-        {names.map((name, i) => (
-          <input key={"name_" + i} type="hidden" name="names" value={name} />
-        ))}
-        <Button className="w-full" type="submit">
-          Gerar
-        </Button>
-      </form>
-
-      {state.type === "error" && (
-        <div className="text-red-500">{state.error}</div>
-      )}
-
-      {state.type === "success" && (
-        <div>
-          <h3 className="font-medium text-xl">Códigos gerados</h3>
-          <ul className="list-disc list-inside">
-            {Object.entries(state.nameToCode).map(([name, code]) => (
-              <li key={name}>
-                {name}
-                <br />
-                Oi! Vou te passar o bilhete do nosso amigo secreto.
-                <br />
-                Esse link é secreto! Não mande pra ninguém, ta?
-                <br />
-                <br />
-                <a
-                  className="underline font-bold"
-                  href={new URL(`/${code}`, window.location.origin).toString()}
-                >
-                  {new URL(`/${code}`, window.location.origin).toString()}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <main id="main" className="page-shell create-page">
+      <Link href="/sorteios" className="back-link">
+        <Icon name="back" />
+        {t('create.myExchanges', 'My exchanges')}{' '}
+      </Link>
+      <div className="page-intro">
+        <h1>{t('create.shallWeDrawNames', 'Shall we draw names?')}</h1>
+        <p>
+          {t(
+            'create.addParticipantsAgreeDetails',
+            'Add the participants and agree on the details.',
+          )}
+        </p>
+      </div>
+      <RaffleForm defaultCurrency={currency} />
     </main>
   );
 }

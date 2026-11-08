@@ -1,0 +1,275 @@
+.slip {
+  position: relative;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 4px 5px calc(20% + 12px);
+}
+
+.paper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 29px);
+  height: 58px;
+  z-index: 1;
+  pointer-events: none;
+  perspective: 700px;
+  transform-origin: 0 50%;
+  transform: rotate(var(--tilt)) scale(0.8);
+}
+
+.slip:not(.animating) .paper {
+  filter: drop-shadow(1px 3px 3px rgb(53 47 35 / 18%));
+}
+
+.label {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-family: var(--font-ui), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.remove {
+  position: relative;
+  z-index: 2;
+  width: 32px;
+  height: 40px;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+.remove svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (hover: hover) {
+  .slip:not(:hover):not(:focus-within) .remove {
+    opacity: 0;
+  }
+}
+
+.under,
+.packet {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 25%;
+}
+
+.under,
+.front {
+  background: linear-gradient(178deg, #fffefb 40%, #f1efe9);
+}
+
+.back {
+  background: linear-gradient(90deg, #f6f3ec, #fffefb 45%, #f4f1ea);
+  box-shadow: inset -2px 0 3px -2px rgb(80 68 48 / 28%);
+}
+
+.strip,
+.hingeQuarter,
+.hingeHalf,
+.hingeInner,
+.panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transform-style: preserve-3d;
+}
+
+.strip {
+  left: 0;
+  right: 0;
+}
+.hingeQuarter {
+  left: 25%;
+  width: 25%;
+  transform-origin: 0 50%;
+  transform: rotateY(-180deg) translateZ(-3px);
+}
+.hingeHalf {
+  left: 50%;
+  width: 50%;
+  transform-origin: 0 50%;
+  transform: rotateY(-180deg) translateZ(-1px);
+}
+.hingeInner {
+  left: 0;
+  width: 50%;
+  transform-origin: 100% 50%;
+  transform: rotateY(-180deg) translateZ(1px);
+}
+.strip > .panel {
+  left: 0;
+  width: 25%;
+}
+.hingeQuarter > .panel,
+.hingeInner > .panel {
+  left: 0;
+  width: 100%;
+}
+.hingeHalf > .panel {
+  left: 50%;
+  width: 50%;
+}
+
+.front,
+.back {
+  position: absolute;
+  inset: 0 -0.5px;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.panel > .back {
+  transform: rotateY(180deg);
+}
+
+.writing {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--i) * -100%);
+  width: 400%;
+  display: flex;
+  align-items: center;
+  padding: 0 44px 0 16px;
+  background: linear-gradient(
+    transparent calc(100% - 13px),
+    var(--rule) calc(100% - 13px),
+    var(--rule) calc(100% - 12px),
+    transparent calc(100% - 12px)
+  );
+}
+
+.writing span {
+  color: var(--ink);
+  font-family: var(--font-handwriting), cursive;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.stub {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: -9px;
+  height: 9px;
+  opacity: 0;
+  background: #f7f4ec;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 55%,
+    96% 80%,
+    91% 40%,
+    86% 75%,
+    80% 50%,
+    73% 90%,
+    66% 45%,
+    60% 70%,
+    52% 35%,
+    45% 85%,
+    38% 50%,
+    31% 75%,
+    24% 40%,
+    17% 85%,
+    10% 50%,
+    5% 75%,
+    0 45%
+  );
+}
+
+.animating .paper {
+  animation: settle var(--settle) cubic-bezier(0.3, 1.4, 0.5, 1) var(--settle-at) backwards;
+}
+.animating .strip {
+  animation: tear var(--tear) cubic-bezier(0.3, 0.7, 0.2, 1) var(--start) backwards;
+}
+.animating .stub {
+  animation: stub-away var(--tear) ease-in var(--start) backwards;
+}
+.animating .hingeHalf {
+  animation: unfolded var(--fold1) cubic-bezier(0.5, 0.05, 0.25, 1) var(--fold1-at) backwards;
+}
+.animating .hingeQuarter,
+.animating .hingeInner {
+  animation: unfolded var(--fold2) cubic-bezier(0.45, 0.05, 0.3, 1) var(--fold2-at) backwards;
+}
+.animating .label {
+  animation: label-in var(--fold2) ease-out var(--fold1-at) backwards;
+}
+
+@keyframes tear {
+  0% {
+    transform: translateY(-2px);
+  }
+  40% {
+    transform: translate(calc(var(--tear-x) * -0.3), -3.5px) rotate(calc(var(--tear-turn) * -0.5));
+  }
+  70% {
+    transform: translate(var(--tear-x), 2.5px) rotate(var(--tear-turn));
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes stub-away {
+  0%,
+  45% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-7px) rotate(-1.5deg);
+  }
+}
+
+@keyframes unfolded {
+  from {
+    transform: rotateY(0deg) translateZ(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes label-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+@media (pointer: coarse) {
+  .remove {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 650px) {
+  .slip {
+    padding-left: calc(20% + 9px);
+  }
+  .writing span {
+    font-size: 26px;
+  }
+}

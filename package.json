@@ -1,33 +1,53 @@
 {
-  "name": "elefante-branco",
+  "name": "amigos-secretos",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=3600 next dev",
+    "dev": "next dev --port 3600",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint ."
+    "start": "next start --port 3600",
+    "lint": "oxlint --deny-warnings .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "test:unit": "vitest run --project unit",
+    "test:browser": "vitest run --project browser",
+    "test:watch": "vitest",
+    "test:browser:watch": "vitest --project browser --browser.headless=false"
   },
   "dependencies": {
-    "@upstash/redis": "^1.35.7",
-    "next": "^16.0.8",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "tailwind-merge": "^2.5.4"
+    "@base-ui/react": "^1.9.0",
+    "intl-messageformat": "^12.1.4",
+    "motion": "^14.10.1",
+    "next": "^16.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.187.0"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "16.4.5",
+    "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^24.10.2",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "autoprefixer": "^10.4.22",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.8",
-    "postcss": "^8.5.6",
-    "sass": "^1.95.1",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.9.3"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.187.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "@vitest/browser-playwright": "^5.1.0",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "oxlint-tsgolint": "^7.0.2006",
+    "playwright": "^1.65.0",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~6.0.0",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0",
+    "vitest-browser-react": "^2.3.0"
   },
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@12.18.0",
   "engines": {
     "node": "24.x"
   }

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; ./node_modules/.bin/oxfmt --write --no-error-on-unmatched-pattern \"$f\"; } >/dev/null 2>&1 || true",
+            "timeout": 30,
+            "statusMessage": "Formatting with oxfmt"
+          }
+        ]
+      }
+    ]
+  }
+}
