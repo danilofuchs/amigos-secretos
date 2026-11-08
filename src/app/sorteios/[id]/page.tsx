@@ -6,6 +6,8 @@ import { getRaffle, getTicketOpens } from '@/lib/store';
 import { RaffleForm } from '@/components/RaffleForm';
 import { Icon } from '@/components/Icon';
 import { ShareTickets } from '@/components/ShareTickets';
+import { sentCookie } from '@/lib/sent-cookie';
+import { cookies } from 'next/headers';
 export async function generateMetadata() {
   const { t } = await getI18n();
   return {
@@ -43,6 +45,7 @@ export default async function ManagePage({ params }: { params: Promise<{ id: str
           title={raffle.title}
           tickets={raffle.tickets}
           opens={opens}
+          initialSent={(await cookies()).get(sentCookie(raffle.id))?.value ?? ''}
         />
       )}
       <RaffleForm

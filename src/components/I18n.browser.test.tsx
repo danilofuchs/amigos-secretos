@@ -8,7 +8,11 @@ test('message language changes independently of the interface', async () => {
   const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
   const screen = await render(
     <LanguageContext value={{ locale: 'en' }}>
-      <ShareTickets title="Festa da turma" tickets={[{ name: 'João', code: 'aB0123456789' }]} />
+      <ShareTickets
+        raffleId="abcdefABCDEF"
+        title="Festa da turma"
+        tickets={[{ name: 'João', code: 'aB0123456789' }]}
+      />
     </LanguageContext>,
   );
   await screen.getByRole('combobox', { name: 'Message language' }).selectOptions('es');

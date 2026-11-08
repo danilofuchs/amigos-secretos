@@ -6,51 +6,70 @@ import { useI18n } from '@/components/I18nContext';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Icon } from './Icon';
 import { TicketArrival } from './TicketArrival';
-const SENT_KEY = 'sent-tickets';
+import { sentCookie } from '@/lib/sent-cookie';
+/** Before sent marks moved to a cookie, they lived in localStorage under this key. */
+const LEGACY_SENT_KEY = 'sent-tickets';
 const sentListeners = new Set<() => void>();
-function readSent() {
-  try {
-    return localStorage.getItem(SENT_KEY) ?? '[]';
-  } catch {
-    return '[]';
-  }
+const parseSent = (raw: string) =>
+  raw.split('.').filter((code) => /^[A-Za-z0-9]{1,32}$/.test(code));
+function readSentCookie(raffleId: string) {
+  const prefix = `${sentCookie(raffleId)}=`;
+  return (
+    document.cookie
+      .split('; ')
+      .find((part) => part.startsWith(prefix))
+      ?.slice(prefix.length) ?? ''
+  );
+}
+function writeSentCookie(raffleId: string, codes: string[]) {
+  document.cookie = `${sentCookie(raffleId)}=${codes.join('.')}; path=/sorteios; max-age=31536000; samesite=lax`;
+  for (const listener of sentListeners) listener();
 }
 function subscribeSent(listener: () => void) {
   sentListeners.add(listener);
-  window.addEventListener('storage', listener);
   return () => {
     sentListeners.delete(listener);
-    window.removeEventListener('storage', listener);
   };
 }
-/** Which links this browser has sent, kept per ticket code so a redraw keeps them marked. */
-function useSentTickets(): string[] {
-  const raw = useSyncExternalStore(subscribeSent, readSent, () => '[]');
-  try {
-    const codes: unknown = JSON.parse(raw);
-    return Array.isArray(codes) ? codes.filter((c): c is string => typeof c === 'string') : [];
-  } catch {
-    return [];
-  }
-}
-function markSent(code: string, value: boolean) {
-  const codes = new Set<string>(JSON.parse(readSent()) as string[]);
-  if (value) codes.add(code);
-  else codes.delete(code);
-  try {
-    localStorage.setItem(SENT_KEY, JSON.stringify([...codes].slice(-500)));
-  } catch {
-    /* the mark lasts only until reload */
-  }
-  for (const listener of sentListeners) listener();
+/**
+ * Which links this browser has sent, per ticket code so a redraw keeps them marked. Kept in a
+ * cookie so the server renders the same marks the browser will show.
+ */
+function useSentTickets(raffleId: string, initial: string, codes: string[]) {
+  const raw = useSyncExternalStore(
+    subscribeSent,
+    () => readSentCookie(raffleId),
+    () => initial,
+  );
+  useEffect(() => {
+    try {
+      const legacy = JSON.parse(localStorage.getItem(LEGACY_SENT_KEY) ?? '[]') as unknown;
+      if (!Array.isArray(legacy) || !legacy.length) return;
+      const mine = legacy.filter((code) => codes.includes(code as string)) as string[];
+      if (!mine.length) return;
+      const current = parseSent(readSentCookie(raffleId));
+      writeSentCookie(raffleId, [...new Set([...current, ...mine])]);
+      const others = legacy.filter((code) => !mine.includes(code as string));
+      if (others.length) localStorage.setItem(LEGACY_SENT_KEY, JSON.stringify(others));
+      else localStorage.removeItem(LEGACY_SENT_KEY);
+    } catch {
+      /* nothing to carry over */
+    }
+    // Carried over once per raffle and ticket list.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [raffleId, codes.join('.')]);
+  return parseSent(raw);
 }
 export function ShareTickets({
   raffleId,
   title,
   tickets,
   opens = {},
+  initialSent = '',
 }: {
-  raffleId?: string;
+  raffleId: string;
+  /** The raffle's sent-marks cookie as the server saw it. */
+  initialSent?: string;
   title: string;
   tickets: { name: string; code: string }[];
   opens?: Record<string, string>;
@@ -60,7 +79,20 @@ export function ShareTickets({
   const sendingLocale = messageLocale ?? locale;
   const [copied, setCopied] = useState<{ name: string; code: string } | null>(null);
   const [fallback, setFallback] = useState('');
-  const sent = useSentTickets();
+  const sent = useSentTickets(
+    raffleId,
+    initialSent,
+    tickets.map((ticket) => ticket.code),
+  );
+  const markSent = (code: string, value: boolean) => {
+    const codes = new Set(parseSent(readSentCookie(raffleId)));
+    if (value) codes.add(code);
+    else codes.delete(code);
+    writeSentCookie(
+      raffleId,
+      [...codes].filter((c) => tickets.some((ticket) => ticket.code === c)),
+    );
+  };
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pasteReady, setPasteReady] = useState<string | null>(null);
   const pasteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -128,7 +160,7 @@ export function ShareTickets({
           ))}
         </select>
       </label>
-      {raffleId && <TicketArrival raffleId={raffleId} />}
+      <TicketArrival raffleId={raffleId} />
       <ul className="send-list">
         {tickets.map((ticket) => {
           const opened = opens[ticket.code];

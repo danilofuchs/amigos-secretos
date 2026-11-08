@@ -6,7 +6,9 @@ const ticket = { name: 'Ana', code: '8BZn3yXTfAd6' };
 
 test('copies the private link and confirms inside the same button', async () => {
   const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
-  const screen = await render(<ShareTickets title="Turma" tickets={[ticket]} />);
+  const screen = await render(
+    <ShareTickets raffleId="abcdefABCDEF" title="Turma" tickets={[ticket]} />,
+  );
   await screen.getByRole('button', { name: 'Copiar mensagem de Ana' }).click();
   await expect
     .element(screen.getByRole('button', { name: 'Mensagem de Ana copiada' }))
@@ -17,7 +19,9 @@ test('copies the private link and confirms inside the same button', async () => 
 
 test('offers selectable text when clipboard access fails', async () => {
   vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValue(new Error('Permission denied'));
-  const screen = await render(<ShareTickets title="Turma" tickets={[ticket]} />);
+  const screen = await render(
+    <ShareTickets raffleId="abcdefABCDEF" title="Turma" tickets={[ticket]} />,
+  );
   await screen.getByRole('button', { name: 'Copiar mensagem de Ana' }).click();
   await expect
     .element(screen.getByRole('textbox', { name: 'Mensagem para copiar' }))
