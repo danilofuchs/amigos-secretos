@@ -11,7 +11,8 @@ const PAPER = '#fffefb';
 const INK = '#2146a0';
 const RULE = '#c4d4ec';
 const MARGIN = '#d79897';
-const TEXT = '#353b47';
+/** Graphite, for the pencilled note under the slip. */
+const PENCIL = '#5c5f66';
 
 const SLIP = { width: 760, height: 300 };
 /** A slip of notebook paper with a hand-torn bottom edge: uneven steps, uneven depth. */
@@ -49,11 +50,8 @@ function FoldedSlip({ rotate, top, left }: { rotate: number; top: number; left: 
 }
 
 export default async function Image() {
-  const [handwriting, ui] = await Promise.all([
-    // Static instances: the image renderer can't read the site's variable fonts.
-    readFile(join(process.cwd(), 'src/app/og-fonts/caveat-600.ttf')),
-    readFile(join(process.cwd(), 'src/app/og-fonts/public-sans-400.ttf')),
-  ]);
+  // A static instance: the image renderer can't read the site's variable font.
+  const handwriting = await readFile(join(process.cwd(), 'src/app/og-fonts/caveat-600.ttf'));
   return new ImageResponse(
     <div
       style={{
@@ -62,7 +60,6 @@ export default async function Image() {
         display: 'flex',
         position: 'relative',
         background: DESK,
-        fontFamily: 'Public Sans',
       }}
     >
       <FoldedSlip rotate={-14} top={404} left={880} />
@@ -118,13 +115,15 @@ export default async function Image() {
       <div
         style={{
           position: 'absolute',
-          left: 120,
-          top: 490,
+          left: 128,
+          top: 468,
           width: 700,
           display: 'flex',
-          fontSize: 32,
-          lineHeight: 1.35,
-          color: TEXT,
+          fontFamily: 'Caveat',
+          fontSize: 46,
+          lineHeight: 1.15,
+          color: PENCIL,
+          transform: 'rotate(-1.2deg)',
         }}
       >
         Sorteie os nomes e mande um bilhete secreto para cada pessoa.
@@ -132,10 +131,7 @@ export default async function Image() {
     </div>,
     {
       ...size,
-      fonts: [
-        { name: 'Caveat', data: handwriting, weight: 600, style: 'normal' },
-        { name: 'Public Sans', data: ui, weight: 400, style: 'normal' },
-      ],
+      fonts: [{ name: 'Caveat', data: handwriting, weight: 600, style: 'normal' }],
     },
   );
 }
