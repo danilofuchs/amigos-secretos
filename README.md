@@ -2,13 +2,38 @@
 
 Amigo secreto do jeito de sempre: nomes escritos à caneta num caderno, papel dobrado, sorteio numa cestinha e um bilhete privado para cada pessoa, enviado pelo WhatsApp.
 
+**[amigossecretos.vercel.app](https://amigossecretos.vercel.app)**
+
+![Página inicial: um bilhete de caderno com o convite e um bilhete dobrado de exemplo para abrir](docs/screenshots/home.webp)
+
 ## Como funciona
 
-1. **Nomes.** Escreva quem participa, um por linha (colar uma lista separada por vírgula ou ponto e vírgula também funciona). Nomes repetidos ganham um risco vermelho na hora.
-2. **Exceções.** Diga quem não pode tirar quem, uma pessoa por vez ou um grupo inteiro (um casal, irmãos). O app sugere a regra no sentido contrário e avisa, antes do sorteio, quando as exceções tornam o sorteio impossível.
-3. **Combinados.** Data do encontro, valor do presente (faixa, até, a partir de ou por volta de), tema e regras livres. Tudo é salvo automaticamente.
-4. **Sorteio.** Os nomes vão dobrados para a cestinha, que é sacudida e virada sobre a lista de bilhetes. O sorteio acontece no servidor.
-5. **Envio.** Cada pessoa tem um link próprio. Copie a mensagem ou abra o WhatsApp para escolher o contato.
+**1. Nomes.** Escreva quem participa, um por linha (colar uma lista separada por vírgula ou ponto e vírgula também funciona). Nomes repetidos ganham um risco vermelho na hora.
+
+![Página "Quem vai participar?" do caderno, com oito nomes escritos à caneta](docs/screenshots/nomes.webp)
+
+**2. Exceções.** Diga quem não pode tirar quem, uma pessoa por vez ou um grupo inteiro (um casal, irmãos). O app sugere a regra no sentido contrário e avisa, antes do sorteio, quando as exceções tornam o sorteio impossível.
+
+![Página "Quem não pode tirar quem?": Ana e Bruno não se tiram, e Carla não tira Elisa, com a regra contrária sugerida a lápis](docs/screenshots/excecoes.webp)
+
+**3. Combinados.** Ocasião, data e horário do encontro, local, tema e valor do presente (faixa, até, a partir de ou por volta de), além de regras livres. Tudo é salvo automaticamente.
+
+![Página "Nossos combinados" preenchida: Natal da família, 24/12/2026 às 19:30, casa da vó, entre R$ 80 e 150](docs/screenshots/combinados.webp)
+
+**4. Sorteio.** Os nomes são escritos em papeizinhos, dobrados e jogados numa cestinha, que é sacudida e virada sobre a lista de bilhetes. O sorteio acontece no servidor, e toda combinação válida tem a mesma chance.
+
+![Os papeizinhos com os nomes se dobrando e caindo na cestinha](docs/screenshots/sorteio.webp)
+
+**5. Envio.** Cada pessoa tem um link próprio. Copie a mensagem ou abra o WhatsApp para escolher o contato. Como num chat: um ✓ verde quando foi enviado, ✓✓ azuis quando a pessoa abriu.
+
+![Lista de envio com o status de cada bilhete: aberto, enviado ou ainda não enviado](docs/screenshots/envio.webp)
+
+**6. O bilhete.** Quem recebe abre o papel dobrado no celular, puxando para o lado ou tocando, e vê o nome que tirou e os combinados.
+
+<p>
+  <img src="docs/screenshots/bilhete-fechado.webp" alt="Bilhete dobrado no celular, esperando para ser aberto" width="300">
+  <img src="docs/screenshots/bilhete-aberto.webp" alt="Bilhete aberto mostrando o nome sorteado e os combinados do encontro" width="300">
+</p>
 
 Enquanto ninguém abriu o bilhete, dá para mudar nomes e exceções e sortear de novo: os links continuam os mesmos, porque pertencem a quem recebe. Depois da primeira abertura, os pares ficam fixos; os combinados continuam editáveis.
 
