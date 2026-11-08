@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import type { BasketScene } from '@/lib/wicker-basket-3d';
 import { POUR_AT } from '@/lib/basket-timing';
 import { claimBasket, dropBasket, letGoBasket } from '@/lib/basket-stage';
+import { lockScroll } from '@/lib/scroll-lock';
 
 export const CEREMONY_KEY = 'draw-ceremony';
 /** Marks a ceremony started on the create page, before the raffle had an id. */
@@ -43,7 +44,9 @@ export function TicketArrival({ raffleId }: { raffleId: string }) {
     if (!active || !panel) return;
     panel.dataset.arriving = '';
     panel.scrollIntoView({ block: 'start', behavior: 'instant' });
+    const unlock = lockScroll();
     return () => {
+      unlock();
       delete panel.dataset.arriving;
     };
   }, [active]);

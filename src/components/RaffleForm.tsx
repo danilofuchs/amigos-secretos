@@ -21,6 +21,7 @@ import { useDemoNameList, useSamplePick } from '@/lib/demo-name';
 import { NotebookRings } from './NotebookRings';
 import { DrawCeremony } from './DrawCeremony';
 import { dropBasket } from '@/lib/basket-stage';
+import { lockScroll } from '@/lib/scroll-lock';
 import { CEREMONY_KEY, NEW_RAFFLE } from './TicketArrival';
 import { BudgetSentence } from './BudgetSentence';
 import { HighlightBox } from './HighlightBox';
@@ -227,6 +228,8 @@ export function RaffleForm({
   const ripped = ripFrom !== null && ripFrom === state;
   const [ceremonyFrom, setCeremonyFrom] = useState<ActionState | null>(null);
   const inCeremony = ripped && ceremonyFrom === state;
+  // From the tear onwards things move to fixed screen spots; the basket keeps its own lock after.
+  useEffect(() => (ripped ? lockScroll() : undefined), [ripped]);
   function submitDraw() {
     try {
       sessionStorage.setItem(CEREMONY_KEY, raffle?.id ?? NEW_RAFFLE);

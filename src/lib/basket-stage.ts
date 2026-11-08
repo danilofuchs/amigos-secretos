@@ -1,10 +1,16 @@
+import { lockScroll } from './scroll-lock';
 import type { BasketScene } from './wicker-basket-3d';
 
 /**
  * The ceremony basket lives on its own canvas on the page body, outside React, so it survives the
  * move from the form to the slips list and keeps going there instead of starting over.
  */
-type Stage = { scene: BasketScene | null; canvas: HTMLCanvasElement; unclaimed: number };
+type Stage = {
+  scene: BasketScene | null;
+  canvas: HTMLCanvasElement;
+  unclaimed: number;
+  unlock: () => void;
+};
 let stage: Stage | null = null;
 let generation = 0;
 /** How long a basket nobody picked up stays on screen before it quietly leaves. */
@@ -18,7 +24,7 @@ export function startCeremony(names: string[], onShaken: () => void) {
   canvas.className = 'draw-ceremony';
   canvas.setAttribute('aria-hidden', 'true');
   document.body.append(canvas);
-  stage = { scene: null, canvas, unclaimed: 0 };
+  stage = { scene: null, canvas, unclaimed: 0, unlock: lockScroll() };
   void (async () => {
     try {
       const family =
@@ -74,6 +80,7 @@ export function dropBasket() {
   generation++;
   if (!leaving) return;
   window.clearTimeout(leaving.unclaimed);
+  leaving.unlock();
   leaving.canvas.dataset.leaving = '';
   window.setTimeout(() => {
     leaving.scene?.dispose();
