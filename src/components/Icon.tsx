@@ -6,6 +6,7 @@ type IconName =
   | 'close'
   | 'copy'
   | 'check'
+  | 'checks'
   | 'chevron'
   | 'lock'
   | 'people'
@@ -17,6 +18,7 @@ const paths: Record<IconName, string> = {
   close: 'm6 6 12 12M6 18 18 6',
   copy: 'M9 8V4h11v13h-4M4 8h11v13H4z',
   check: 'm5 12 4 4L19 6',
+  checks: 'm1.5 12.5 4 4L15 7m-4.5 8.5 1 1L20.5 7',
   chevron: 'm6 9 6 6 6-6',
   lock: 'M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5zM12 15v2',
   people:

@@ -58,15 +58,12 @@ export function ShareTickets({
   const { t, locale } = useI18n();
   const [messageLocale, setMessageLocale] = useState<Locale | null>(null);
   const sendingLocale = messageLocale ?? locale;
-  const openedAt = new Intl.DateTimeFormat(locale, {
-    dateStyle: 'short',
-    timeStyle: 'short',
-    timeZone: 'UTC',
-  });
   const [copied, setCopied] = useState<{ name: string; code: string } | null>(null);
   const [fallback, setFallback] = useState('');
   const sent = useSentTickets();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pasteReady, setPasteReady] = useState<string | null>(null);
+  const pasteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
       if (timer.current) clearTimeout(timer.current);
@@ -93,7 +90,10 @@ export function ShareTickets({
       setFallback(text(name, code));
     }
   }
-  const sentCount = tickets.filter((ticket) => sent.includes(ticket.code)).length;
+  // An opened ticket was obviously sent, even if not from this browser.
+  const sentCount = tickets.filter(
+    (ticket) => sent.includes(ticket.code) || opens[ticket.code],
+  ).length;
   const openedCount = tickets.filter((ticket) => opens[ticket.code]).length;
   return (
     <section className="share-panel">
@@ -134,7 +134,7 @@ export function ShareTickets({
           const opened = opens[ticket.code];
           const isSent = sent.includes(ticket.code);
           return (
-            <li key={ticket.code} className={`send-row ${isSent ? 'sent' : ''}`}>
+            <li key={ticket.code} className={`send-row ${isSent || opened ? 'sent' : ''}`}>
               <span className="folded-ticket" data-ticket={ticket.code} aria-hidden="true" />
               <div className="send-who">
                 <div className="share-slip slip-shadow">
@@ -142,31 +142,30 @@ export function ShareTickets({
                     <span>{ticket.name}</span>
                   </strong>
                 </div>
+                {/* Like a chat app: one green check once sent, two blue checks once opened. */}
                 <p className="send-stamps">
-                  <span className={`ticket-opened ${opened ? 'opened' : ''}`}>
-                    {opened ? (
-                      <>
-                        <Icon name="check" width="13" height="13" />
-                        {t('shareTickets.openedStamp', 'opened')}{' '}
-                        {openedAt.format(new Date(opened)) + ' UTC'}
-                      </>
-                    ) : (
-                      t('shareTickets.hasntOpenedYet', "hasn't opened it yet")
-                    )}
-                  </span>
-                  {isSent && (
+                  {opened ? (
+                    <span className="ticket-status opened">
+                      <Icon name="checks" width="16" height="16" />
+                      <OpenedWhen at={opened} />
+                    </span>
+                  ) : isSent ? (
                     <button
                       type="button"
-                      className="sent-stamp"
+                      className="ticket-status sent"
                       onClick={() => markSent(ticket.code, false)}
                       aria-label={t('shareTickets.unmarkMessage', 'Unmark message to {name}', {
                         name: ticket.name,
                       })}
                       title={t('shareTickets.unmark', 'Unmark')}
                     >
-                      <Icon name="check" width="12" height="12" />
-                      {t('shareTickets.sentStamp', 'sent')}{' '}
+                      <Icon name="check" width="16" height="16" />
+                      {t('shareTickets.sentStatus', 'sent, not opened yet')}
                     </button>
+                  ) : (
+                    <span className="ticket-status">
+                      {t('shareTickets.notSentYet', 'not sent yet')}
+                    </span>
                   )}
                 </p>
               </div>
@@ -196,6 +195,18 @@ export function ShareTickets({
                   type="button"
                   onClick={() => {
                     markSent(ticket.code, true);
+                    // WhatsApp's desktop app can send only the link from a shared message, so
+                    // the whole message also goes to the clipboard, ready to paste.
+                    if (window.matchMedia('(pointer: fine)').matches) {
+                      void navigator.clipboard
+                        .writeText(text(ticket.name, ticket.code))
+                        .then(() => {
+                          setPasteReady(ticket.code);
+                          if (pasteTimer.current) clearTimeout(pasteTimer.current);
+                          pasteTimer.current = setTimeout(() => setPasteReady(null), 12000);
+                        })
+                        .catch(() => {});
+                    }
                     window.open(
                       `https://wa.me/?text=${encodeURIComponent(text(ticket.name, ticket.code))}`,
                       '_blank',
@@ -207,6 +218,15 @@ export function ShareTickets({
                   {t('shareTickets.sendWhatsapp', 'Send on WhatsApp')}{' '}
                 </button>
               </div>
+              {pasteReady === ticket.code && (
+                <output className="paste-hint">
+                  <Icon name="copy" width="14" height="14" />
+                  {t(
+                    'shareTickets.pasteIfOnlyLink',
+                    'Message copied too. If WhatsApp sends only the link, paste the message in the chat.',
+                  )}
+                </output>
+              )}
             </li>
           );
         })}
@@ -235,4 +255,26 @@ export function ShareTickets({
       )}
     </section>
   );
+}
+
+const subscribeNever = () => () => {};
+let pageLoadedAt: number | undefined;
+const loadedAt = () => (pageLoadedAt ??= Date.now());
+/** When a ticket was opened, in the organizer's own clock; filled in once the page is in the browser. */
+function OpenedWhen({ at }: { at: string }) {
+  const { t, locale } = useI18n();
+  const now = useSyncExternalStore(subscribeNever, loadedAt, () => null);
+  if (now === null) return t('shareTickets.openedStatus', 'opened');
+  const opened = new Date(at),
+    today = new Date(now);
+  const time = new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(opened);
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  if (opened.toDateString() === today.toDateString())
+    return t('shareTickets.openedToday', 'opened today at {time}', { time });
+  if (opened.toDateString() === yesterday.toDateString())
+    return t('shareTickets.openedYesterday', 'opened yesterday at {time}', { time });
+  return t('shareTickets.openedOn', 'opened on {date} at {time}', {
+    date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(opened),
+    time,
+  });
 }

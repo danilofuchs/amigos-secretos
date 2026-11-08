@@ -108,9 +108,14 @@ export function AgentTools() {
 
     const controller = new AbortController();
     for (const tool of tools) {
-      void Promise.resolve(context.registerTool(tool, { signal: controller.signal })).catch(
-        () => {},
-      );
+      // One tool the browser refuses must not keep the others from registering.
+      try {
+        void Promise.resolve(context.registerTool(tool, { signal: controller.signal })).catch(
+          (error: unknown) => console.warn(`WebMCP: couldn't register ${tool.name}`, error),
+        );
+      } catch (error) {
+        console.warn(`WebMCP: couldn't register ${tool.name}`, error);
+      }
     }
     return () => {
       controller.abort();

@@ -846,12 +846,15 @@ svg {
   height: 13px;
   margin-top: 2px;
 }
+/* Lines up with the notebook column, which is capped at 640px and centered. */
 .archive-action {
+  max-width: 640px;
+  margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 14px;
   align-items: baseline;
-  margin-top: 22px;
+  margin-top: 44px;
 }
 .archive-action .text-link {
   font-size: 11px;
@@ -2333,19 +2336,6 @@ body {
   grid-template-columns: minmax(0, 640px);
   justify-content: center;
 }
-.ticket-opened {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 10px;
-  color: var(--muted);
-  font-size: 10px;
-  white-space: nowrap;
-}
-.ticket-opened.opened {
-  color: var(--ink);
-  font-weight: 600;
-}
 .reopen-action {
   display: flex;
   align-items: center;
@@ -2559,37 +2549,44 @@ body {
   gap: 8px 18px;
   min-width: 0;
 }
+.paste-hint {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 12px;
+}
+.ticket-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.ticket-status.sent {
+  color: #3f7a4f;
+  cursor: pointer;
+}
+.ticket-status.sent:hover {
+  text-decoration: line-through;
+}
+.ticket-status.opened {
+  color: #2f7fd0;
+  font-weight: 600;
+}
 .send-stamps {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 6px 10px;
   margin: 0;
-}
-.send-stamps .ticket-opened {
-  margin: 0;
-}
-.sent-stamp {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border: 1.5px solid currentColor;
-  border-radius: 4px;
-  background: none;
-  color: #3f7a4f;
-  font: inherit;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transform: rotate(-4deg);
-  cursor: pointer;
-  opacity: 0.85;
-}
-.sent-stamp:hover {
-  opacity: 1;
-  text-decoration: line-through;
 }
 .send-actions {
   display: flex;
