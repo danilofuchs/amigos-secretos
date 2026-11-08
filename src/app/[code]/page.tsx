@@ -20,7 +20,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: { title, description },
+    openGraph: { title, description, images: ['/opengraph-image'] },
     robots: { index: false, follow: false },
     referrer: 'no-referrer',
   };
