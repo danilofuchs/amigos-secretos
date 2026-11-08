@@ -14,45 +14,59 @@ function formatWhen(locale: string, date: string, time: string) {
 
 export function HiddenRules({ rules, details }: { rules: string; details?: ExchangeDetails }) {
   const { t, locale } = useI18n();
+  const agreed =
+    details &&
+    (details.date ||
+      details.time ||
+      details.location ||
+      details.theme ||
+      formatBudget(locale, details))
+      ? details
+      : null;
   return (
     <section className="rules paper-shadow">
       <div className="rules-sheet torn-paper">
         <h2>{t('hiddenRules.whatWeAgreed', 'What we agreed')}</h2>
-        {details && (
+        {agreed && (
           <dl className="exchange-summary">
-            {(details.date || details.time) && (
+            {(agreed.date || agreed.time) && (
               <>
                 <dt>{t('hiddenRules.exchangeDate', 'Exchange date')}</dt>
-                <dd>{formatWhen(locale, details.date, details.time)}</dd>
+                <dd className="handwritten">{formatWhen(locale, agreed.date, agreed.time)}</dd>
               </>
             )}
-            {details.location && (
+            {agreed.location && (
               <>
                 <dt>{t('hiddenRules.location', 'Location')}</dt>
-                <dd>{details.location}</dd>
+                <dd className="handwritten">{agreed.location}</dd>
               </>
             )}
-            {formatBudget(locale, details) && (
+            {formatBudget(locale, agreed) && (
               <>
                 <dt>{t('hiddenRules.budgetPerGift', 'Budget per gift')}</dt>
-                <dd>{formatBudget(locale, details)}</dd>
+                <dd className="handwritten">{formatBudget(locale, agreed)}</dd>
               </>
             )}
-            {details.theme && (
+            {agreed.theme && (
               <>
                 <dt>{t('hiddenRules.giftTheme', 'Gift theme')}</dt>
-                <dd>{details.theme}</dd>
+                <dd className="handwritten">{agreed.theme}</dd>
               </>
             )}
           </dl>
         )}
-        <p className="preserve-lines handwritten">
-          {rules ||
-            t(
-              'hiddenRules.organizerHasntAddedDetails',
-              "The organizer hasn't added the details yet.",
-            )}
-        </p>
+        {rules ? (
+          <p className="preserve-lines handwritten">{rules}</p>
+        ) : (
+          !agreed && (
+            <p className="preserve-lines handwritten">
+              {t(
+                'hiddenRules.organizerHasntAddedDetails',
+                "The organizer hasn't added the details yet.",
+              )}
+            </p>
+          )
+        )}
         <p className="hint">
           {t(
             'hiddenRules.organizerCanUpdateThese',

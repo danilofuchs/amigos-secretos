@@ -1,4 +1,5 @@
 import { getI18n } from '@/lib/i18n/server';
+import { isLocale, translator } from '@/lib/i18n';
 import { normalizeTicketCode } from '@/lib/codes';
 import { HiddenName } from '@/components/HiddenName';
 import { HiddenRules } from '@/components/HiddenRules';
@@ -6,10 +7,20 @@ import { getTicket } from '@/lib/store';
 import Link from 'next/link';
 import { markOpened } from './actions';
 export const dynamic = 'force-dynamic';
-export async function generateMetadata() {
-  const { t } = await getI18n();
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string }>;
+}) {
+  // Link previews are fetched by the messaging app, not the participant: follow the message's language.
+  const { lang } = await searchParams;
+  const t = isLocale(lang) ? translator(lang) : (await getI18n()).t;
+  const title = t('ticket.secretSlip', 'Your secret slip');
+  const description = t('ticket.previewDescription', 'Open it to see whose name you drew.');
   return {
-    title: t('ticket.secretSlip', 'Your secret slip'),
+    title,
+    description,
+    openGraph: { title, description },
     robots: { index: false, follow: false },
     referrer: 'no-referrer',
   };

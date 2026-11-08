@@ -194,6 +194,7 @@
   "ticket.backHome": "Voltar ao início",
   "ticket.checkCodeAskOrganizer": "Confira o código ou peça ao organizador um novo link. O sorteio também pode ter sido arquivado.",
   "ticket.keepLinkPrivateAnyone": "Guarde este link só para você. Quem tiver acesso a ele poderá ver seu amigo.",
+  "ticket.previewDescription": "Abra para ver quem você tirou no amigo secreto.",
   "ticket.secretSlip": "Seu bilhete secreto",
   "ticket.weCouldntFindSlip": "Não encontramos este bilhete.",
   "validation.atLeastTwoNames": "Escreva pelo menos 2 nomes para sortear.",

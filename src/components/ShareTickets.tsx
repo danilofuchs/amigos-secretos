@@ -1,5 +1,5 @@
 'use client';
-import { shareMessage, locales, localeNames, type Locale } from '@/lib/i18n';
+import { shareMessage, locales, localeNames, ticketPath, type Locale } from '@/lib/i18n';
 
 import { useI18n } from '@/components/I18nContext';
 
@@ -78,7 +78,7 @@ export function ShareTickets({
       sendingLocale,
       name,
       title,
-      String(new URL(`/${code}`, window.location.origin)),
+      String(new URL(ticketPath(code, sendingLocale), window.location.origin)),
     );
   }
   async function copy(name: string, code: string) {

@@ -50,6 +50,9 @@ export function translator(locale: Locale): Translate {
   };
 }
 
+/** A ticket's link names the language its message was sent in, so link previews match it. */
+export const ticketPath = (code: string, locale: Locale) => `/${code}?lang=${locale}`;
+
 export function shareMessage(locale: Locale, name: string, title: string, url: string) {
   return translator(locale)(
     'share.message',

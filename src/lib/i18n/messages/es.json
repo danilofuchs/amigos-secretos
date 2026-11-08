@@ -194,6 +194,7 @@
   "ticket.backHome": "Volver al inicio",
   "ticket.checkCodeAskOrganizer": "Comprueba el código o pide otro enlace al organizador. El intercambio también puede haberse archivado.",
   "ticket.keepLinkPrivateAnyone": "Guarda este enlace solo para ti. Quien lo tenga podrá ver a quién te toca regalar.",
+  "ticket.previewDescription": "Ábrelo para ver a quién te tocó en el amigo secreto.",
   "ticket.secretSlip": "Tu papelito secreto",
   "ticket.weCouldntFindSlip": "No encontramos este papelito.",
   "validation.atLeastTwoNames": "Escribe al menos 2 nombres para sortear.",

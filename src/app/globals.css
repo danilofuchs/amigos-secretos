@@ -1122,7 +1122,7 @@ svg {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.rules .handwritten {
+.rules p.handwritten {
   background-image: repeating-linear-gradient(
     0deg,
     transparent 0,
@@ -1743,7 +1743,7 @@ svg {
   .rules h2 {
     font-size: 31px;
   }
-  .rules .handwritten {
+  .rules p.handwritten {
     font-size: 24px;
   }
   .share-heading h2 {
@@ -2755,9 +2755,14 @@ body {
   font-size: 12px;
   color: var(--muted);
 }
+.exchange-summary {
+  align-items: baseline;
+}
 .exchange-summary dd {
   margin: 0;
   overflow-wrap: anywhere;
+  font-size: 22px;
+  line-height: 1.25;
 }
 
 .site-footer {
