@@ -240,8 +240,11 @@ export function HiddenName({
     ignoreClickUntil.current = performance.now() + 350;
     const fold = Math.min(1, Math.floor(strip.progress));
     const travelled = strip.progress - fold;
-    const open = !cancelled && (travelled > 0.4 || (g.speed > 2 && travelled > 0.12));
-    goTo(cancelled ? g.base : open ? fold + 1 : fold, cancelled ? 0 : g.speed);
+    const held = event.timeStamp - g.lastTime;
+    const speed = held > 120 ? 0 : g.speed;
+    // A pull that pauses keeps going on release; only pulling back, or barely moving, refolds.
+    const open = !cancelled && travelled > 0.06 && speed > -0.5;
+    goTo(cancelled ? g.base : open ? fold + 1 : fold, cancelled ? 0 : speed);
   }
 
   const stripHeight = stripWidth / STRIP_ASPECT;
