@@ -2661,6 +2661,7 @@ body {
     background:
       repeating-linear-gradient(transparent 0 31px, rgb(110 138 196 / 30%) 31px 32px) 0 4px,
       var(--paper);
+    background-attachment: local;
     box-shadow:
       0 1px 2px rgb(64 53 38 / 18%),
       0 12px 26px -10px rgb(64 53 38 / 35%);
@@ -3366,6 +3367,7 @@ body {
   background:
     repeating-linear-gradient(transparent 0 31px, rgb(110 138 196 / 30%) 31px 32px) 0 4px,
     var(--paper);
+  background-attachment: local;
   box-shadow:
     0 1px 2px rgb(64 53 38 / 18%),
     0 12px 26px -10px rgb(64 53 38 / 35%);
