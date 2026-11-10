@@ -10,6 +10,7 @@ import {
 } from '@/lib/exchange-details';
 
 import { useI18n } from '@/components/I18nContext';
+import type { Locale, Translate } from '@/lib/i18n';
 
 import { useActionState, useEffect, useId, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
@@ -124,10 +125,13 @@ const DRAW_INTENTS = ['draw', 'redraw'];
 export function RaffleForm({
   raffle,
   canRedraw = false,
+  openedBy = [],
   defaultCurrency = 'BRL',
 }: {
   raffle?: Raffle;
   canRedraw?: boolean;
+  /** Who has opened their slip, earliest first. */
+  openedBy?: string[];
   defaultCurrency?: string;
 }) {
   const { t, locale } = useI18n();
@@ -512,6 +516,7 @@ export function RaffleForm({
                     drawn={drawn}
                     changed={lineupChanged}
                     onUndo={undoLineup}
+                    openedBy={openedBy}
                   />
                   <TeacherMark error={shownError('names')}>
                     {(describedBy) => (
@@ -575,6 +580,7 @@ export function RaffleForm({
                       drawn={drawn}
                       changed={lineupChanged}
                       onUndo={undoLineup}
+                      openedBy={openedBy}
                     />
                   ) : (
                     <p className="notebook-footnote">
@@ -1124,6 +1130,21 @@ function Sheet({
   );
 }
 
+/** Up to three names, then how many more: "Ana, Bruno, Carla and 4 more people". */
+function whoOpened(people: string[], locale: Locale, t: Translate) {
+  const shown = people.slice(0, 3),
+    more = people.length - shown.length;
+  const items = more
+    ? [
+        ...shown,
+        t('raffleForm.morePeople', '{count, plural, one {# more person} other {# more people}}', {
+          count: more,
+        }),
+      ]
+    : shown;
+  return new Intl.ListFormat(locale, { type: 'conjunction' }).format(items);
+}
+
 function LineupNote({
   archived,
   locked,
@@ -1131,15 +1152,17 @@ function LineupNote({
   changed,
   names,
   onUndo,
+  openedBy,
 }: {
   onUndo: () => void;
+  openedBy: string[];
   names: boolean;
   archived: boolean;
   locked: boolean;
   drawn: boolean;
   changed: boolean;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   if (archived)
     return (
       <p className="notebook-footnote locked-note">
@@ -1151,10 +1174,22 @@ function LineupNote({
     return (
       <p className="notebook-footnote locked-note">
         <Icon name="lock" />
-        {t(
-          'raffleForm.someoneHasOpenedSlip',
-          'Someone has opened a slip, so participants and exclusions are now fixed.',
-        )}{' '}
+        {openedBy.length === 0
+          ? t(
+              'raffleForm.someoneHasOpenedSlip',
+              'Someone has opened a slip, so participants and exclusions are now fixed.',
+            )
+          : names
+            ? t(
+                'raffleForm.openedLocksNames',
+                "{people} already {count, plural, one {opened their slip} other {opened their slips}}, so the names can't be changed anymore.",
+                { people: whoOpened(openedBy, locale, t), count: openedBy.length },
+              )
+            : t(
+                'raffleForm.openedLocksExclusions',
+                "{people} already {count, plural, one {opened their slip} other {opened their slips}}, so the exclusions can't be changed anymore.",
+                { people: whoOpened(openedBy, locale, t), count: openedBy.length },
+              )}{' '}
       </p>
     );
   if (!drawn) return null;

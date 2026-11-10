@@ -24,5 +24,17 @@ type Story = StoryObj<typeof meta>;
 export const NewExchange: Story = {};
 export const Draft: Story = { args: { raffle: draft } };
 export const Drawn: Story = { args: { raffle: drawn, canRedraw: true } };
-export const DrawnAndOpened: Story = { args: { raffle: drawn, canRedraw: false } };
+export const OpenedByOne: Story = {
+  args: { raffle: drawn, canRedraw: false, openedBy: ['Ana'] },
+};
+export const OpenedByTwo: Story = {
+  args: { raffle: drawn, canRedraw: false, openedBy: ['João', 'Maria'] },
+};
+export const OpenedByMany: Story = {
+  args: {
+    raffle: drawn,
+    canRedraw: false,
+    openedBy: ['João', 'Maria', 'José', 'Ana', 'Bruno', 'Carla', 'Diego'],
+  },
+};
 export const Archived: Story = { args: { raffle: archived } };

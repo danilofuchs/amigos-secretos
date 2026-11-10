@@ -53,6 +53,10 @@ export default async function ManagePage({ params }: { params: Promise<{ id: str
         raffle={raffle}
         defaultCurrency={currency}
         canRedraw={raffle.status === 'drawn' && Object.keys(opens).length === 0}
+        openedBy={raffle.tickets
+          .filter((ticket) => opens[ticket.code])
+          .sort((a, b) => (opens[a.code] ?? '').localeCompare(opens[b.code] ?? ''))
+          .map((ticket) => ticket.name)}
       />
     </main>
   );
