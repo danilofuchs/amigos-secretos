@@ -7,6 +7,7 @@ import {
   CircleGeometry,
   CylinderGeometry,
   DirectionalLight,
+  DoubleSide,
   FrontSide,
   Group,
   Mesh,
@@ -50,6 +51,10 @@ type Options = {
   /** After the shake, tip the basket over its rim so whatever is inside falls out. */
   pour?: boolean;
   fontFamily: string;
+  /** A slip starts folding, once per fold. */
+  onFold?(): void;
+  /** The shake begins: the slips start tumbling inside. */
+  onShake?(): void;
   onDone(): void;
 };
 
@@ -57,7 +62,10 @@ const FOV = 30;
 const STEP = 0.17;
 const APPEAR = 0.35;
 const READ = 0.75;
-const FOLD = 0.8;
+const FOLD = 1.1;
+/** Within the fold phase: the half fold, a beat, then the quarter fold. */
+const FIRST_FOLD = [0, 0.4] as const;
+const SECOND_FOLD = [0.58, 1] as const;
 const FLY = 0.85;
 const TIP_ANGLE = 2.2;
 /** Seconds the basket takes to glide from the ceremony to where it pours. */
@@ -234,17 +242,21 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
   const rope = keep(ropeTexture());
   rope.repeat.set(18, 1);
   const wallGeometry = keep(new CylinderGeometry(radius, radius * 0.82, basketHeight, 64, 1, true));
-  const outside = keep(new MeshLambertMaterial({ map: weave, side: FrontSide }));
+  const outside = keep(
+    new MeshLambertMaterial({ map: weave, side: FrontSide, shadowSide: DoubleSide }),
+  );
   const inside = keep(new MeshLambertMaterial({ map: weave, side: BackSide, color: 0x8a7457 }));
   const wallOut = new Mesh(wallGeometry, outside);
   wallOut.castShadow = true;
   basket.add(wallOut, new Mesh(wallGeometry, inside));
   const floor = new Mesh(
     keep(new CircleGeometry(radius * 0.82, 48)),
-    keep(new MeshLambertMaterial({ map: weave, color: 0x6f5a40 })),
+    keep(new MeshLambertMaterial({ map: weave, color: 0x6f5a40, shadowSide: DoubleSide })),
   );
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -basketHeight / 2 + 0.5;
+  // A solid bottom: without it the shadow is only a ring of wall.
+  floor.castShadow = true;
   basket.add(floor);
   const rim = new Mesh(
     keep(new TorusGeometry(radius, Math.max(5, radius * 0.07), 14, 72)),
@@ -270,6 +282,7 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
     start: Vector3;
     delay: number;
     spin: Vector3;
+    folds: number;
   };
   const slips: Slip[] = [];
   const names = options.names.slice(0, MAX_SLIPS);
@@ -316,6 +329,7 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
       start,
       delay: i * step,
       spin: new Vector3((i % 3) - 1, ((i * 7) % 5) / 2 - 1, ((i * 5) % 3) - 1),
+      folds: 0,
     });
   });
 
@@ -363,7 +377,8 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
   };
   let frame = 0,
     began = 0,
-    finished = false;
+    finished = false,
+    shaking = false;
 
   function tick(now: number) {
     began ||= now;
@@ -378,7 +393,11 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
         fly = clamp((local - APPEAR - READ - FOLD) / FLY);
       slip.mesh.visible = fly < 1;
       slip.mesh.scale.setScalar(0.6 + 0.4 * ease(appear));
-      shapeSlip(slip, 2 - 2 * ease(fold));
+      const half = clamp((fold - FIRST_FOLD[0]) / (FIRST_FOLD[1] - FIRST_FOLD[0])),
+        quarterFold = clamp((fold - SECOND_FOLD[0]) / (SECOND_FOLD[1] - SECOND_FOLD[0]));
+      const started = (fold > FIRST_FOLD[0] ? 1 : 0) + (fold > SECOND_FOLD[0] ? 1 : 0);
+      for (; slip.folds < started; slip.folds++) options.onFold?.();
+      shapeSlip(slip, 2 - ease(half) - ease(quarterFold));
       const f = ease(fly);
       const peak = new Vector3(
         (slip.start.x + mouth.x) / 2,
@@ -401,6 +420,10 @@ export function createBasketScene(canvasElement: HTMLCanvasElement, options: Opt
       );
     }
     const shakeT = Math.min(t - shakeStart, SHAKE);
+    if (shakeT > 0 && !shaking) {
+      shaking = true;
+      options.onShake?.();
+    }
     const tipT = t - shakeStart - SHAKE;
     if (carry) {
       const k = (now - carry.began) / 1000;

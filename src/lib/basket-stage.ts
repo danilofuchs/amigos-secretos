@@ -1,3 +1,4 @@
+import { playSound } from './sounds';
 import { lockScroll } from './scroll-lock';
 import type { BasketScene } from './wicker-basket-3d';
 
@@ -41,6 +42,13 @@ export function startCeremony(names: string[], onShaken: () => void) {
         height: box.height,
         names,
         fontFamily: family,
+        onFold: () => playSound('fold', { rate: 0.9 + Math.random() * 0.25, volume: 0.45 }),
+        // The clip is shorter than the shake, so it repeats at a slightly different pace each time.
+        onShake: () => {
+          playSound('shuffle', { volume: 0.8 });
+          playSound('shuffle', { delay: 0.55, rate: 0.94 });
+          playSound('shuffle', { delay: 1.1, rate: 1.06, volume: 0.6 });
+        },
         onDone: onShaken,
       });
     } catch {
