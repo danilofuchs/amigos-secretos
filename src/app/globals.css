@@ -3467,3 +3467,20 @@ body {
 .sound-toggle[aria-pressed='false'] {
   color: var(--muted);
 }
+/* Paper grain: warm fibres laid over the sheet and its ink, too faint to compete with the writing. */
+:root {
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.37 0 0 0 0 0.24 1.6 0 0 0 -0.62'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+:is(.notebook, .letter-sheet, .rules-sheet, .raffle-card, .empty-sheet) {
+  position: relative;
+}
+:is(.notebook, .letter-sheet, .rules-sheet, .raffle-card, .empty-sheet)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--paper-grain);
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+}
