@@ -15,3 +15,9 @@ CREATE TABLE IF NOT EXISTS ticket_opens (
   code TEXT PRIMARY KEY,
   opened_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS accounts (
+  google_sub TEXT PRIMARY KEY,
+  owner TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);

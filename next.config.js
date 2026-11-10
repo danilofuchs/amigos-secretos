@@ -13,6 +13,11 @@ module.exports = {
           { key: 'X-Frame-Options', value: 'DENY' },
         ],
       },
+      // Sign in with Google needs the page's origin; ticket pages keep sending no referrer at all.
+      {
+        source: '/sorteios',
+        headers: [{ key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' }],
+      },
     ];
   },
 };

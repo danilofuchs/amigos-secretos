@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ownerId } from '@/lib/session';
 import { listRaffles } from '@/lib/store';
 import { Icon } from '@/components/Icon';
+import { GoogleAccount } from '@/components/GoogleAccount';
+import { accountEmail } from '@/lib/accounts';
 export async function generateMetadata() {
   const { t } = await getI18n();
   return {
@@ -25,9 +27,10 @@ export default async function RafflesPage({
   };
   const owner = await ownerId();
   const archived = (await searchParams).archived === '1';
-  const raffles = owner
-    ? (await listRaffles(owner)).filter((r) => (r.status === 'archived') === archived)
-    : [];
+  const [all, email] = owner
+    ? await Promise.all([listRaffles(owner), accountEmail(owner)])
+    : [[], null];
+  const raffles = all.filter((r) => (r.status === 'archived') === archived);
   return (
     <main id="main" className="page-shell">
       <div className="page-heading">
@@ -40,10 +43,13 @@ export default async function RafflesPage({
             )}
           </p>
         </div>
-        <Link href="/create" className="button">
-          <Icon name="plus" />
-          {t('raffles.newExchange', 'New exchange')}{' '}
-        </Link>
+        <div className="heading-actions">
+          <Link href="/create" className="button">
+            <Icon name="plus" />
+            {t('raffles.newExchange', 'New exchange')}{' '}
+          </Link>
+          <GoogleAccount email={email} />
+        </div>
       </div>
       <div className="tabs">
         <Link
@@ -115,13 +121,6 @@ export default async function RafflesPage({
           </div>
         </section>
       )}
-      <p className="session-note">
-        <Icon name="lock" />
-        {t(
-          'raffles.listBelongsBrowserClearing',
-          "Your exchanges are saved only in this browser. On another phone or computer, or after clearing this browser's data, they won't show up here.",
-        )}{' '}
-      </p>
     </main>
   );
 }
