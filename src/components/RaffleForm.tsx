@@ -1,4 +1,5 @@
 'use client';
+import { playSound, preloadSounds } from '@/lib/sounds';
 import {
   budgetIsValid,
   emptyDetails,
@@ -230,6 +231,7 @@ export function RaffleForm({
   const inCeremony = ripped && ceremonyFrom === state;
   // From the tear onwards things move to fixed screen spots; the basket keeps its own lock after.
   useEffect(() => (ripped ? lockScroll() : undefined), [ripped]);
+  useEffect(() => preloadSounds('tear', 'fold', 'shuffle', 'pen', 'pencil', 'eraser'), []);
   function submitDraw() {
     try {
       sessionStorage.setItem(CEREMONY_KEY, raffle?.id ?? NEW_RAFFLE);
@@ -431,7 +433,10 @@ export function RaffleForm({
       );
       return;
     }
-    if (!ripped) setRipFrom(state);
+    if (ripped) return;
+    setRipFrom(state);
+    // The rip lands as the sheet snaps free of the spiral, a third of a second into the tug.
+    playSound('tear', { delay: 0.2 });
   }
   return (
     <form action={action} className="raffle-form">
@@ -826,20 +831,23 @@ export function RaffleForm({
                                   />
                                 )}
                               </TeacherMark>
-                              <span className="date-time-joiner" aria-hidden="true">
-                                {t('raffleForm.atTime', 'at')}
+                              {/* On a narrow page the time drops to the next line, with its "at". */}
+                              <span className="date-time-at">
+                                <span className="date-time-joiner" aria-hidden="true">
+                                  {t('raffleForm.atTime', 'at')}
+                                </span>
+                                <HighlightBox className="exchange-time">
+                                  <input
+                                    type="time"
+                                    className="written-input"
+                                    aria-label={t('raffleForm.timeOptional', 'Time (optional)')}
+                                    value={details.time}
+                                    onChange={(e) =>
+                                      setDetails((d) => ({ ...d, time: e.target.value }))
+                                    }
+                                  />
+                                </HighlightBox>
                               </span>
-                              <HighlightBox className="exchange-time">
-                                <input
-                                  type="time"
-                                  className="written-input"
-                                  aria-label={t('raffleForm.timeOptional', 'Time (optional)')}
-                                  value={details.time}
-                                  onChange={(e) =>
-                                    setDetails((d) => ({ ...d, time: e.target.value }))
-                                  }
-                                />
-                              </HighlightBox>
                             </div>
                           </div>
                           <div className="notebook-field exchange-location">
@@ -975,7 +983,7 @@ export function RaffleForm({
           <Icon name="lock" />
           {t(
             'raffleForm.useBrowserReturnExchanges',
-            "To come back to this exchange, use this same browser. On another phone or computer, or after clearing this browser's data, you won't be able to manage it.",
+            'To come back to this exchange, use this same browser. To manage it from another phone or computer, sign in with Google in My exchanges.',
           )}{' '}
         </p>
       )}

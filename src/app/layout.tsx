@@ -1,27 +1,16 @@
 import { getI18n } from '@/lib/i18n/server';
 import { I18nProvider, LanguagePicker } from '@/components/I18nProvider';
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 import Link from 'next/link';
 import { InkFilter } from '@/components/InkFilter';
 import { Logo } from '@/components/Logo';
 import { Icon } from '@/components/Icon';
 import { HideWhileCreating } from '@/components/HideWhileCreating';
+import { SoundToggle } from '@/components/SoundToggle';
 import { AgentTools } from '@/components/AgentTools';
 import { FooterCreateLink } from '@/components/FooterCreateLink';
+import { handwriting, ui } from './fonts';
 import './globals.css';
-const handwriting = localFont({
-  src: '../../public/fonts/caveat.ttf',
-  variable: '--font-handwriting',
-  weight: '400 700',
-  display: 'swap',
-});
-const ui = localFont({
-  src: '../../public/fonts/figtree.ttf',
-  variable: '--font-ui',
-  weight: '300 900',
-  display: 'swap',
-});
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getI18n();
   return {
@@ -70,6 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <footer className="site-footer">
             <p>Amigos Secretos</p>
             <LanguagePicker />
+            <SoundToggle />
             <FooterCreateLink />
           </footer>
         </I18nProvider>

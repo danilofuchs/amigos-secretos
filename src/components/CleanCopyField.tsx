@@ -1,4 +1,5 @@
 'use client';
+import { playEraser, playPencil, playSound } from '@/lib/sounds';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cleanText } from '@/lib/text-rules';
 import type {
@@ -196,6 +197,15 @@ export function CleanCopyField({
       start += d * scale + PEN_LIFT_MS;
       return span;
     });
+    // One pen stroke per line, timed with the ink.
+    const strokes = timeline.map(({ start: at, duration }) =>
+      playSound('pen', {
+        delay: at / 1000,
+        duration: duration / 1000,
+        rate: 0.92 + Math.random() * 0.16,
+        volume: 0.5,
+      }),
+    );
     const began = performance.now();
     function draw(now: number) {
       const elapsed = now - began;
@@ -219,7 +229,10 @@ export function CleanCopyField({
       }
     }
     frame.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(frame.current);
+    return () => {
+      cancelAnimationFrame(frame.current);
+      for (const stop of strokes) stop();
+    };
   }, [copying]);
 
   function finishCopy() {
@@ -293,6 +306,9 @@ export function CleanCopyField({
         const caret = clean(field.value.slice(0, field.selectionEnd ?? field.value.length)).length;
         requestAnimationFrame(() => field.setSelectionRange(caret, caret));
       }
+      const added = cleaned.trim().length - value.trim().length;
+      if (added > 0) playPencil();
+      else if (added < 0) playEraser(-added);
       onValue(cleaned);
     },
   };

@@ -10,7 +10,9 @@ type IconName =
   | 'chevron'
   | 'lock'
   | 'people'
-  | 'send';
+  | 'send'
+  | 'sound'
+  | 'sound-off';
 const paths: Record<IconName, string> = {
   arrow: 'M4 12h15m-6-6 6 6-6 6',
   back: 'M20 12H5m6-6-6 6 6 6',
@@ -24,6 +26,8 @@ const paths: Record<IconName, string> = {
   people:
     'M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-6 9v-2a6 6 0 0 1 12 0v2m2-17a4 4 0 0 1 0 8m2 3a6 6 0 0 1 4 6',
   send: 'm3 11 18-8-8 18-2-8-8-2Zm8 2L21 3',
+  sound: 'M4 9v6h4l5 4V5L8 9zm12.5-.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12',
+  'sound-off': 'M4 9v6h4l5 4V5L8 9zm13 0 5 6m0-6-5 6',
 };
 export function Icon({ name, ...props }: SVGProps<SVGSVGElement> & { name: IconName }) {
   return (

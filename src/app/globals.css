@@ -846,6 +846,39 @@ svg {
   height: 13px;
   margin-top: 2px;
 }
+.heading-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+.account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 4px 6px;
+  max-width: 260px;
+}
+.account .google-button {
+  min-height: 40px;
+}
+.account .account-hint {
+  flex-basis: 100%;
+  margin-top: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: right;
+}
+.account:has(form) .account-hint {
+  flex-basis: auto;
+}
+.account .text-link {
+  padding: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
 /* Lines up with the notebook column, which is capped at 640px and centered. */
 .archive-action {
   max-width: 640px;
@@ -970,6 +1003,7 @@ svg {
   margin: 0 auto 5px;
 }
 .strip-scene {
+  touch-action: pan-y;
   height: 230px;
   width: 100%;
   position: relative;
@@ -995,7 +1029,6 @@ svg {
   border: 0;
   padding: 0;
   cursor: grab;
-  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -1699,6 +1732,14 @@ svg {
   .page-heading p {
     margin-top: 8px;
     font-size: 12px;
+  }
+  .heading-actions,
+  .account {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .account .account-hint {
+    text-align: left;
   }
   .page-heading > .button {
     min-height: 40px;
@@ -2790,6 +2831,12 @@ body {
 /* The day and the optional time read as one written line: "24/12/2026 às 19:30". */
 .date-time {
   display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+}
+.date-time-at {
+  display: flex;
   align-items: baseline;
   gap: 10px;
 }
@@ -3412,4 +3459,11 @@ body {
 /* A flag only shows above its page's top edge; the part tucked under the paper never paints over another page. */
 .paper-layer > .notebook-tabs {
   clip-path: inset(-24px -24px calc(100% - 33px) -24px);
+}
+.sound-toggle {
+  min-height: 44px;
+  font-size: 12px;
+}
+.sound-toggle[aria-pressed='false'] {
+  color: var(--muted);
 }
