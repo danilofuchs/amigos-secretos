@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'Write the names, agree on the rules and send everyone a secret slip.',
     ),
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://amigossecretos.vercel.app'),
-    icons: { icon: '/icon.svg', apple: '/icon.svg' },
+    icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
   };
 }
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
