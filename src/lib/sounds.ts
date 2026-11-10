@@ -118,6 +118,11 @@ export function playSound(
       const at = Math.max(ctx.currentTime, startAt);
       node.loop = duration !== undefined && from === undefined;
       node.start(at, from ?? 0);
+      // A slice cut from mid-recording would click without a short fade in.
+      if (from !== undefined) {
+        level.gain.setValueAtTime(0, at);
+        level.gain.linearRampToValueAtTime(volume, at + 0.012);
+      }
       if (duration !== undefined) {
         level.gain.setValueAtTime(volume, at + Math.max(0, duration - FADE));
         level.gain.linearRampToValueAtTime(0, at + duration);
@@ -135,20 +140,18 @@ export function playSound(
   };
 }
 
-/** Where each stroke starts in the pencil recording, in seconds. */
-const PENCIL_STROKES = [0, 0.08, 0.18, 0.28, 0.38, 0.48, 0.58, 0.66, 0.76];
+/** The pencil recording's length, in seconds; each letter plays a stroke from somewhere in it. */
+const PENCIL_LENGTH = 1.8;
 let lastScratch = 0;
 /** One short pencil stroke for a typed letter; fast typing thins out instead of piling up. */
 export function playPencil() {
   const now = performance.now();
   if (now - lastScratch < 70) return;
   lastScratch = now;
-  const from = PENCIL_STROKES[Math.floor(Math.random() * PENCIL_STROKES.length)] ?? 0;
   playSound('pencil', {
-    from,
-    duration: 0.09,
-    rate: 0.9 + Math.random() * 0.2,
-    volume: 0.3 + Math.random() * 0.15,
+    from: Math.random() * (PENCIL_LENGTH - 0.12),
+    duration: 0.12,
+    volume: 0.8 + Math.random() * 0.2,
   });
 }
 
@@ -160,9 +163,8 @@ export function playEraser(removed: number) {
   lastRub = now;
   const length = removed > 2 ? 0.35 : 0.14;
   playSound('eraser', {
-    from: Math.random() * (1.6 - length),
+    from: Math.random() * (1.45 - length),
     duration: length,
-    rate: 0.9 + Math.random() * 0.2,
-    volume: 0.35 + Math.random() * 0.1,
+    volume: 0.8 + Math.random() * 0.2,
   });
 }

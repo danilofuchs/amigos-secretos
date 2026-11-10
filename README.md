@@ -77,6 +77,10 @@ Na Vercel, sem essas variáveis o app falha em vez de gravar em outro lugar. Use
 - **WhatsApp:** só recebe a mensagem quando você toca em enviar. "Enviado" é uma marcação local, não confirmação de entrega.
 - Páginas privadas não são indexadas. Os bilhetes não enviam `Referer`; "Meus sorteios" envia só a origem do site, que o botão do Google exige.
 
+## Sons
+
+O papel rasgando, as dobras, o cesto e a caneta foram gerados no ElevenLabs. O lápis é [Writing quickly - pencil](https://freesound.org/people/Valerie-Vivegnis/sounds/843924/), de Valerie-Vivegnis, e a borracha é [PENCIL_ERASING_1-2](https://freesound.org/people/mistorcaveman/sounds/154704/), de mistorcaveman, ambos no Freesound (CC0). O botão "Sons" no rodapé desliga todos.
+
 ## Desenvolvimento
 
 ```sh
