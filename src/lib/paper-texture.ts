@@ -1,4 +1,4 @@
-import { STRIP_ASPECT } from './paper-fold';
+import { STRIP_ASPECT, type CreaseLine } from './paper-fold';
 
 const TEX_W = 2048;
 const TEX_H = Math.round(TEX_W / STRIP_ASPECT);
@@ -9,7 +9,16 @@ const BASELINE = 0.7;
 const RULE_GAP = 0.35;
 
 export type NameLayout = { lines: string[]; fontSize: number; baselines: [number, ...number[]] };
-export type StripFaces = { front: HTMLCanvasElement; back: HTMLCanvasElement; layout: NameLayout };
+/** A fold line on the flat strip and how worn it is: 1 is a crease made once, more is darker. */
+export type Crease = { line: CreaseLine; depth: number };
+export type Creases = readonly Crease[];
+export type StripFaces = {
+  front: HTMLCanvasElement;
+  back: HTMLCanvasElement;
+  layout: NameLayout;
+  /** Redraws both faces with these fold lines; the paper, ink and name stay exactly as they were. */
+  setCreases(creases: Creases): void;
+};
 
 function random(seed: number) {
   return () => {
@@ -104,19 +113,42 @@ function paperSide(ctx: CanvasRenderingContext2D, outline: Path2D, seed: number)
     ctx.lineTo(TEX_W, y * TEX_H);
     ctx.stroke();
   }
-  for (const k of [1, 2, 3]) {
-    const x = (TEX_W * k) / 4;
-    const crease = ctx.createLinearGradient(x - 9, 0, x + 9, 0);
-    crease.addColorStop(0, 'rgba(110, 88, 56, 0)');
-    crease.addColorStop(0.42, 'rgba(110, 88, 56, .085)');
-    crease.addColorStop(0.55, 'rgba(255, 255, 255, .7)');
-    crease.addColorStop(1, 'rgba(110, 88, 56, 0)');
-    ctx.fillStyle = crease;
-    ctx.fillRect(x - 9, 0, 18, TEX_H);
-  }
   ctx.strokeStyle = 'rgba(206, 196, 175, .7)';
   ctx.lineWidth = 4;
   ctx.stroke(outline);
+  ctx.restore();
+}
+
+/** A fold line; the more it has been folded, the darker it gets and the more stray creases run beside it. */
+function crease(ctx: CanvasRenderingContext2D, { line: [s0, v0, s1, v1], depth }: Crease) {
+  const x0 = (TEX_W * s0) / 4,
+    y0 = (1 - v0) * TEX_H,
+    x1 = (TEX_W * s1) / 4,
+    y1 = (1 - v1) * TEX_H;
+  const length = Math.hypot(x1 - x0, y1 - y0);
+  ctx.save();
+  ctx.translate(x0, y0);
+  ctx.rotate(Math.atan2(y1 - y0, x1 - x0));
+  const shade = ctx.createLinearGradient(0, -9, 0, 9);
+  shade.addColorStop(0, 'rgba(110, 88, 56, 0)');
+  shade.addColorStop(0.42, `rgba(110, 88, 56, ${0.085 * depth})`);
+  shade.addColorStop(0.55, `rgba(255, 255, 255, ${Math.min(0.85, 0.7 * depth)})`);
+  shade.addColorStop(1, 'rgba(110, 88, 56, 0)');
+  ctx.fillStyle = shade;
+  ctx.fillRect(0, -9, length, 18);
+  const rand = random(Math.round((s0 * 7 + v0 * 13 + s1 * 17 + v1 * 19) * 1000));
+  ctx.lineWidth = 1.4;
+  for (let i = 1; i < depth * 2 - 1; i++) {
+    const offset = (rand() < 0.5 ? -1 : 1) * (3 + rand() * 9),
+      lean = (rand() - 0.5) * 14,
+      from = rand() * 0.4,
+      to = 0.6 + rand() * 0.4;
+    ctx.strokeStyle = `rgba(110, 88, 56, ${0.035 + rand() * 0.035})`;
+    ctx.beginPath();
+    ctx.moveTo(from * length, offset - lean * from);
+    ctx.lineTo(to * length, offset + lean * (to - 0.5));
+    ctx.stroke();
+  }
   ctx.restore();
 }
 
@@ -184,11 +216,11 @@ function inkLayer(layout: NameLayout, family: string, seed: number) {
   return layer;
 }
 
-export function drawStripFaces(name: string, family: string): StripFaces {
-  const front = canvas(),
-    back = canvas();
-  const frontCtx = context(front),
-    backCtx = context(back);
+export function drawStripFaces(name: string, family: string, creases: Creases): StripFaces {
+  const plainFront = canvas(),
+    plainBack = canvas();
+  const frontCtx = context(plainFront),
+    backCtx = context(plainBack);
   const layout = layoutName(frontCtx, name, family);
   const outline = tornOutline(9);
   const ink = inkLayer(layout, family, 4);
@@ -212,5 +244,22 @@ export function drawStripFaces(name: string, family: string): StripFaces {
     backCtx.drawImage(ink, dx, dy);
   }
   backCtx.restore();
-  return { front, back, layout: { ...layout, fontSize: layout.fontSize / TEX_W } };
+  const front = canvas(),
+    back = canvas();
+  function setCreases(next: Creases) {
+    for (const [face, plain] of [
+      [front, plainFront],
+      [back, plainBack],
+    ] as const) {
+      const ctx = context(face);
+      ctx.clearRect(0, 0, TEX_W, TEX_H);
+      ctx.drawImage(plain, 0, 0);
+      ctx.save();
+      ctx.clip(outline);
+      for (const each of next) crease(ctx, each);
+      ctx.restore();
+    }
+  }
+  setCreases(creases);
+  return { front, back, layout: { ...layout, fontSize: layout.fontSize / TEX_W }, setCreases };
 }

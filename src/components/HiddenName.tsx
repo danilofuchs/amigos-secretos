@@ -5,8 +5,19 @@ import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent } from 'react';
 import type { PaperStrip } from '@/lib/paper-strip-3d';
 import type { NameLayout } from '@/lib/paper-texture';
-import { STRIP_ASPECT, stripWidthFor } from '@/lib/paper-fold';
+import { FOLDED_MOST, STRIP_ASPECT, stripWidthFor } from '@/lib/paper-fold';
 import { Icon } from './Icon';
+import { haptic } from '@/lib/haptic';
+import { playSound, preloadSounds } from '@/lib/sounds';
+
+/** Each fold is felt and heard; opening rustles a little lower and softer than folding. */
+function feelFold(stage: number, folding: boolean) {
+  haptic(stage === FOLDED_MOST);
+  playSound('fold', {
+    rate: (folding ? 1 : 0.85) + Math.random() * 0.12,
+    volume: folding ? 0.55 : 0.4,
+  });
+}
 
 type Mode = 'loading' | 'paper' | 'flat';
 type Gesture = {
@@ -19,6 +30,8 @@ type Gesture = {
   direction: number;
   lastTime: number;
   speed: number;
+  /** The last fold the drag passed, already felt as a tap. */
+  felt: number;
 };
 
 const STRIP_TILT = '-1.43deg';
@@ -32,12 +45,7 @@ async function handwritingFamily() {
   return family;
 }
 
-// Chrome rejects vibrate (and logs an error) until the page has had a tap or key press.
-function buzz() {
-  if (typeof navigator.vibrate === 'function' && navigator.userActivation?.hasBeenActive !== false)
-    navigator.vibrate(10);
-}
-
+const IDLE_MS = 4000;
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function HiddenName({
@@ -52,7 +60,7 @@ export function HiddenName({
 }) {
   const { t } = useI18n();
   const instructions = [
-    t('hiddenName.pullSidewaysOpen', 'Pull sideways to open.'),
+    t('hiddenName.pullRightOpen', 'Pull to the right to open.'),
     t('hiddenName.openLastFold', 'Open the last fold.'),
   ];
   const [fold, setFold] = useState(0);
@@ -69,6 +77,7 @@ export function HiddenName({
   const settledRef = useRef(0);
   const gesture = useRef<Gesture | null>(null);
   const ignoreClickUntil = useRef(0);
+  const lastTouched = useRef(0);
   const revealed = fold === 2 && !moving;
 
   useEffect(() => {
@@ -83,7 +92,6 @@ export function HiddenName({
     });
     observer.observe(canvas);
     function settle(stage: number) {
-      if (stage > settledRef.current) buzz();
       settledRef.current = stage;
       if (stage !== targetRef.current) return;
       setFold(stage);
@@ -131,6 +139,30 @@ export function HiddenName({
   useEffect(() => {
     if (revealed) headingRef.current?.focus({ preventScroll: true });
   }, [revealed]);
+  useEffect(() => preloadSounds('fold'), []);
+
+  // A slip left alone stirs now and then, hinting that it opens.
+  useEffect(() => {
+    if (mode !== 'paper' || fold >= 2 || moving || prefersReducedMotion()) return;
+    lastTouched.current = performance.now();
+    let timer: ReturnType<typeof setTimeout>,
+      stirs = 0;
+    const wait = (ms: number) => {
+      timer = setTimeout(stir, ms);
+    };
+    function stir() {
+      const idle = performance.now() - lastTouched.current;
+      if (gesture.current || document.hidden || idle < IDLE_MS) {
+        wait(IDLE_MS - idle + 50);
+        return;
+      }
+      stripRef.current?.nudge(1.4);
+      setTimeout(() => stripRef.current?.nudge(0.9), 260);
+      if (++stirs < 3) wait(IDLE_MS * 1.6);
+    }
+    wait(IDLE_MS);
+    return () => clearTimeout(timer);
+  }, [mode, fold, moving]);
   const reported = useRef(false);
   function claim() {
     if (reported.current || !openAction) return;
@@ -144,7 +176,8 @@ export function HiddenName({
       });
   }
 
-  function goTo(stage: number, velocity?: number) {
+  function goTo(stage: number, velocity?: number, felt = targetRef.current) {
+    if (stage !== felt) feelFold(stage, stage < felt);
     targetRef.current = stage;
     const strip = stripRef.current;
     if (!strip) {
@@ -175,8 +208,9 @@ export function HiddenName({
     requestAnimationFrame(() => buttonRef.current?.focus({ preventScroll: true }));
   }
 
-  function startGesture(event: PointerEvent<HTMLButtonElement>) {
+  function startGesture(event: PointerEvent<HTMLDivElement>) {
     const strip = stripRef.current;
+    lastTouched.current = performance.now();
     if (!strip || !event.isPrimary || event.button !== 0) return;
     const from = strip.progress;
     gesture.current = {
@@ -184,15 +218,16 @@ export function HiddenName({
       x: event.clientX,
       y: event.clientY,
       from,
-      base: Math.min(1, Math.floor(from + 1e-3)),
+      base: targetRef.current,
       dragging: false,
       direction: 1,
       lastTime: event.timeStamp,
       speed: 0,
+      felt: targetRef.current,
     };
   }
 
-  function moveGesture(event: PointerEvent<HTMLButtonElement>) {
+  function moveGesture(event: PointerEvent<HTMLDivElement>) {
     const g = gesture.current,
       strip = stripRef.current;
     if (!g || !strip || g.pointer !== event.pointerId) return;
@@ -206,30 +241,35 @@ export function HiddenName({
       }
       if (dx < 8 || dx < dy * 1.2) return;
       g.dragging = true;
-      claim();
+      window.getSelection()?.removeAllRanges();
+      if (rawDx > 0) claim();
       event.currentTarget.setPointerCapture(event.pointerId);
       setMoving(true);
-      const natural = strip.orientation;
-      const settled = g.from - g.base < 0.05;
-      if (settled && Math.sign(rawDx) !== natural) strip.turn(prefersReducedMotion());
-      g.direction = settled ? Math.sign(rawDx) : natural;
+      setClosing(rawDx < 0);
+      g.direction = Math.sign(rawDx);
     }
+    // The paper follows the finger across as many folds as it is pulled: rightward opens, leftward folds.
     const quarter = strip.stripWidth / 4;
-    const reach = [quarter * 1.6, quarter * 2.4] as const;
-    const travel = (p: number) => Math.min(p, 1) * reach[0] + Math.max(0, p - 1) * reach[1];
-    const at = (d: number) => (d <= reach[0] ? d / reach[0] : 1 + (d - reach[0]) / reach[1]);
-    const next = Math.min(
-      2,
-      Math.max(g.base, at(Math.max(0, travel(g.from) + rawDx * g.direction))),
-    );
-    if (Math.floor(next) > Math.floor(strip.progress)) buzz();
+    // Swipe distance per fold: the extra folds of a closed slip are short, the last unfold long.
+    const reach = [quarter * 0.5, quarter * 1.6, quarter * 2.4] as const;
+    const travel = (p: number) =>
+      p < 0 ? p * reach[0] : Math.min(p, 1) * reach[1] + Math.max(0, p - 1) * reach[2];
+    const at = (d: number) =>
+      d < 0 ? d / reach[0] : d <= reach[1] ? d / reach[1] : 1 + (d - reach[1]) / reach[2];
+    const next = Math.min(2, at(Math.max(FOLDED_MOST * reach[0], travel(g.from) + rawDx)));
+    if (next !== strip.progress) g.direction = Math.sign(next - strip.progress);
+    const reached = next > strip.progress ? Math.floor(next) : Math.ceil(next);
+    if (next > strip.progress ? reached > g.felt : reached < g.felt) {
+      feelFold(reached, reached < g.felt);
+      g.felt = reached;
+    }
     const dt = Math.max(1, event.timeStamp - g.lastTime);
     g.speed = g.speed * 0.6 + ((next - strip.progress) / dt) * 1000 * 0.4;
     g.lastTime = event.timeStamp;
     strip.setProgress(next);
   }
 
-  function endGesture(event: PointerEvent<HTMLButtonElement>, cancelled: boolean) {
+  function endGesture(event: PointerEvent<HTMLDivElement>, cancelled: boolean) {
     const g = gesture.current,
       strip = stripRef.current;
     if (!g || g.pointer !== event.pointerId) return;
@@ -238,13 +278,14 @@ export function HiddenName({
     if (event.currentTarget.hasPointerCapture(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId);
     ignoreClickUntil.current = performance.now() + 350;
-    const fold = Math.min(1, Math.floor(strip.progress));
-    const travelled = strip.progress - fold;
     const held = event.timeStamp - g.lastTime;
     const speed = held > 120 ? 0 : g.speed;
-    // A pull that pauses keeps going on release; only pulling back, or barely moving, refolds.
-    const open = !cancelled && travelled > 0.06 && speed > -0.5;
-    goTo(cancelled ? g.base : open ? fold + 1 : fold, cancelled ? 0 : speed);
+    // On release the fold in progress finishes the way the paper was last moving, even after a pause;
+    // a hair past a fold counts as resting on it.
+    const p = strip.progress;
+    const direction = speed > 0.5 ? 1 : speed < -0.5 ? -1 : g.direction;
+    const stage = cancelled ? g.base : direction > 0 ? Math.ceil(p - 0.06) : Math.floor(p + 0.06);
+    goTo(Math.min(2, Math.max(FOLDED_MOST, stage)), cancelled ? 0 : speed, g.felt);
   }
 
   const stripHeight = stripWidth / STRIP_ASPECT;
@@ -259,7 +300,7 @@ export function HiddenName({
       } satisfies CSSProperties)
     : undefined;
   const flatStyle = {
-    width: stripWidth / 2 ** (2 - fold),
+    width: stripWidth / 2 ** (2 - Math.max(-1, fold)),
     height: stripHeight,
     transform: `translate(-50%, -50%) rotate(${STRIP_TILT})`,
   } satisfies CSSProperties;
@@ -278,7 +319,7 @@ export function HiddenName({
             'hiddenName.youreBuyingGiftPerson',
             "You're buying a gift for this person. Keep it secret.",
           )
-      : instructions[fold];
+      : instructions[Math.max(0, fold)];
 
   return (
     <div className={`paper-ritual ${demo ? 'ritual-demo' : ''}`}>
@@ -287,7 +328,15 @@ export function HiddenName({
           {t('hiddenName.exampleSlipGoAhead', 'An example slip. Go ahead and open it.')}
         </p>
       )}
-      <div className="strip-scene" data-mode={mode}>
+      {/* The swipe belongs to the whole scene, so the opened name can be folded back too. */}
+      <div
+        className="strip-scene"
+        data-mode={mode}
+        onPointerDown={startGesture}
+        onPointerMove={moveGesture}
+        onPointerUp={(event) => endGesture(event, false)}
+        onPointerCancel={(event) => endGesture(event, true)}
+      >
         <canvas ref={canvasRef} className="strip-canvas" aria-hidden="true" />
         {mode !== 'paper' && (
           <div className="strip-flat" style={flatStyle} aria-hidden={!revealed}>
@@ -317,16 +366,12 @@ export function HiddenName({
             ref={buttonRef}
             className="strip-hit"
             type="button"
-            onPointerDown={startGesture}
-            onPointerMove={moveGesture}
-            onPointerUp={(event) => endGesture(event, false)}
-            onPointerCancel={(event) => endGesture(event, true)}
             onClick={() => {
               if (performance.now() < ignoreClickUntil.current) return;
               openNext();
             }}
             aria-label={t('hiddenName.openFold2', 'Open fold {n} of 2', {
-              n: Math.min(2, fold + 1),
+              n: Math.min(2, Math.max(1, fold + 1)),
             })}
             aria-disabled={mode === 'loading'}
             aria-describedby="fold-instruction"

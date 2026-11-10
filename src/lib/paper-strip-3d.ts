@@ -18,18 +18,26 @@ import {
   SRGBColorSpace,
   WebGLRenderer,
 } from 'three';
-import { foldAngles, footprintCenter, STRIP_ASPECT, stripPoint, stripWidthFor } from './paper-fold';
+import {
+  creaseLines,
+  FOLDED_MOST,
+  foldAngles,
+  foldPoint,
+  footprintCenter,
+  footprintMiddle,
+  STRIP_ASPECT,
+  stripWidthFor,
+} from './paper-fold';
 import { drawStripFaces, type NameLayout } from './paper-texture';
 
 export type PaperStrip = {
   readonly progress: number;
   readonly stripWidth: number;
   readonly layout: NameLayout;
-  /** 1 while upright, -1 while turned upside down on the table. */
-  readonly orientation: 1 | -1;
-  turn(instant?: boolean): void;
   setProgress(progress: number): void;
   animateTo(target: number, options?: { velocity?: number; instant?: boolean }): void;
+  /** Flicks the paper toward opening and lets it fall back where it rests. */
+  nudge(velocity: number): void;
   resize(width: number, height: number): void;
   dispose(): void;
 };
@@ -44,12 +52,16 @@ type Options = {
 };
 
 const SEGMENTS = 16;
+/** Rows match the columns' spacing, so the corner fold runs along grid diagonals. */
+const ROWS = 16;
 const LAYER_GAP = 0.7;
 const FOV = 14;
 const TILT = -0.025;
 const STIFFNESS = 64;
-const TURN_STIFFNESS = 110;
-const TURN_LIFT = 0.3;
+/** A new fold line starts faint and deepens each time the paper folds shut there, up to WORN. */
+const FIRST = 0.55;
+const WEAR = 0.35;
+const WORN = 2.6;
 const LIGHT = { x: -0.22, y: 0.34, z: 1 };
 const LIGHT_DOT = 1 / Math.hypot(LIGHT.x, LIGHT.y, LIGHT.z);
 
@@ -83,7 +95,14 @@ export function createPaperStrip(canvas: HTMLCanvasElement, options: Options): P
   ground.receiveShadow = true;
   scene.add(ground);
 
-  const faces = drawStripFaces(options.name, options.fontFamily);
+  // How worn each fold's creases are, by the stage it folds down to; the slip arrives folded twice.
+  const wear = new Map([
+    [1, 1],
+    [0, 1],
+  ]);
+  const creases = () =>
+    [...wear].flatMap(([stage, depth]) => creaseLines(stage).map((line) => ({ line, depth })));
+  const faces = drawStripFaces(options.name, options.fontFamily, creases());
   const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   const texture = (image: HTMLCanvasElement) => {
     const map = new CanvasTexture(image);
@@ -106,20 +125,28 @@ export function createPaperStrip(canvas: HTMLCanvasElement, options: Options): P
   strip.rotation.z = TILT;
   scene.add(strip);
 
+  // A grid per quarter with a point in the middle of every cell, so creases can run along rows,
+  // columns, or either diagonal.
+  const corner = (i: number, j: number) => j * (SEGMENTS + 1) + i;
+  const middle = (i: number, j: number) => (SEGMENTS + 1) * (ROWS + 1) + j * SEGMENTS + i;
+  const grid: [number, number][] = [];
+  for (let j = 0; j <= ROWS; j++) for (let i = 0; i <= SEGMENTS; i++) grid.push([i, j]);
+  for (let j = 0; j < ROWS; j++) for (let i = 0; i < SEGMENTS; i++) grid.push([i + 0.5, j + 0.5]);
+  const indices: number[] = [];
+  for (let j = 0; j < ROWS; j++)
+    for (let i = 0; i < SEGMENTS; i++) {
+      const m = middle(i, j),
+        a = corner(i, j),
+        b = corner(i + 1, j),
+        c = corner(i + 1, j + 1),
+        d = corner(i, j + 1);
+      indices.push(a, b, m, b, c, m, c, d, m, d, a, m);
+    }
   const quarters = [0, 1, 2, 3].map((index) => {
     const geometry = new BufferGeometry();
-    const count = (SEGMENTS + 1) * 2;
-    const uv = new Float32Array(count * 2),
-      indices: number[] = [];
-    for (let i = 0; i <= SEGMENTS; i++) {
-      const u = (index + i / SEGMENTS) / 4;
-      uv.set([u, 0, u, 1], i * 4);
-      if (i < SEGMENTS) {
-        const a = i * 2;
-        indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
-      }
-    }
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array(count * 3), 3));
+    const uv = new Float32Array(grid.length * 2);
+    grid.forEach(([i, j], k) => uv.set([(index + i / SEGMENTS) / 4, j / ROWS], k * 2));
+    geometry.setAttribute('position', new BufferAttribute(new Float32Array(grid.length * 3), 3));
     geometry.setAttribute('uv', new BufferAttribute(uv, 2));
     geometry.setIndex(indices);
     const front = new Mesh(geometry, frontMaterial),
@@ -140,79 +167,69 @@ export function createPaperStrip(canvas: HTMLCanvasElement, options: Options): P
   let frame = 0,
     lastTime = 0,
     disposed = false;
-  let turnAt = 0,
-    turnTo = 0,
-    turnSpeed = 0,
-    turning = false,
-    settledPending = false;
+  let settledPending = false,
+    nudging = false;
 
   function pose() {
     const q = stripW / 4,
       h = stripW / STRIP_ASPECT;
     const angles = foldAngles(progress),
-      center = footprintCenter(progress) * q;
+      center = footprintCenter(progress) * q,
+      middleY = footprintMiddle(progress) * h;
     for (const { index, geometry } of quarters) {
       const position = geometry.getAttribute('position') as BufferAttribute;
-      for (let i = 0; i <= SEGMENTS; i++) {
-        const [x, z] = stripPoint(index + i / SEGMENTS, angles, q, LAYER_GAP, index);
-        position.setXYZ(i * 2, x - center, -h / 2, z);
-        position.setXYZ(i * 2 + 1, x - center, h / 2, z);
-      }
+      grid.forEach(([i, j], k) => {
+        const [x, y, z] = foldPoint(index + i / SEGMENTS, j / ROWS, angles, q, h, LAYER_GAP, index);
+        position.setXYZ(k, x - center, y - middleY, z);
+      });
       position.needsUpdate = true;
       geometry.computeVertexNormals();
     }
-    strip.rotation.z = TILT + Math.PI * turnAt;
-    strip.scale.setScalar(1 - TURN_LIFT * Math.sin(Math.PI * Math.min(1, Math.max(0, turnAt))));
     renderer.render(scene, camera);
   }
 
-  function startTurn(to: number) {
-    turnTo = to;
-    if (!turning) {
-      turning = true;
-      turnSpeed = 0;
+  // A fold presses its creases each time the paper closes there, resting or passing through. It must
+  // have opened well past the fold since, so a nudge or a hovering finger doesn't count twice. The
+  // creases are tucked inside at that moment, so the redraw is unseen.
+  const opened = new Set<number>();
+  function press(next: number) {
+    let changed = false;
+    for (let stage = FOLDED_MOST; stage <= 1; stage++) {
+      if (next > stage + 0.5) opened.add(stage);
+      else if (next <= stage + 0.01 && opened.delete(stage)) {
+        wear.set(stage, Math.min(WORN, (wear.get(stage) ?? FIRST - WEAR) + WEAR));
+        changed = true;
+      }
     }
-  }
-
-  function finish() {
-    if (target === 2 && turnTo === 1) {
-      startTurn(0);
-      return;
-    }
-    if (!turning && settledPending) {
-      settledPending = false;
-      options.onSettle(target);
+    if (changed) {
+      faces.setCreases(creases());
+      frontMap.needsUpdate = backMap.needsUpdate = true;
     }
   }
 
   function tick(now: number) {
     frame = 0;
     const dt = Math.min(0.034, lastTime ? (now - lastTime) / 1000 : 1 / 60);
-    lastTime = settling || turning ? now : 0;
-    if (turning) {
-      turnSpeed +=
-        (TURN_STIFFNESS * (turnTo - turnAt) - 2 * Math.sqrt(TURN_STIFFNESS) * turnSpeed) * dt;
-      turnAt += turnSpeed * dt;
-      if (Math.abs(turnTo - turnAt) < 0.002 && Math.abs(turnSpeed) < 0.03) {
-        turnAt = turnTo;
-        turnSpeed = 0;
-        turning = false;
-        finish();
-      }
-    }
+    lastTime = settling ? now : 0;
     if (settling) {
       velocity += (STIFFNESS * (target - progress) - 2 * Math.sqrt(STIFFNESS) * velocity) * dt;
-      progress = Math.min(2, Math.max(0, progress + velocity * dt));
+      progress = Math.min(2, Math.max(FOLDED_MOST, progress + velocity * dt));
+      press(progress);
       if (Math.abs(target - progress) < 0.003 && Math.abs(velocity) < 0.04) {
         progress = target;
+        press(progress);
         velocity = 0;
         settling = false;
+        nudging = false;
         settledPending = true;
-        finish();
       }
     }
-    if (settling || turning) frame = requestAnimationFrame(tick);
+    if (settling) frame = requestAnimationFrame(tick);
     pose();
+    if (settledPending) {
+      settledPending = false;
+      options.onSettle(target);
+    }
   }
 
   function schedule() {
@@ -259,43 +276,36 @@ export function createPaperStrip(canvas: HTMLCanvasElement, options: Options): P
     get stripWidth() {
       return stripW;
     },
-    get orientation() {
-      return turnTo === 1 ? -1 : 1;
-    },
-    turn(instant = false) {
-      const to = turnTo === 1 ? 0 : 1;
-      if (instant) {
-        turnTo = turnAt = to;
-        turning = false;
-        schedule();
-        return;
-      }
-      startTurn(to);
-      lastTime = 0;
-      schedule();
-    },
     layout: faces.layout,
     setProgress(next) {
-      settling = false;
+      settling = nudging = false;
       velocity = 0;
-      progress = Math.min(2, Math.max(0, next));
+      progress = Math.min(2, Math.max(FOLDED_MOST, next));
+      press(progress);
       schedule();
     },
     animateTo(next, { velocity: initial = 0, instant = false } = {}) {
       target = next;
+      // A tap mid-nudge starts the fold afresh instead of inheriting the flick.
+      if (nudging) settling = nudging = false;
       if (instant) {
         settling = false;
         velocity = 0;
         progress = next;
-        if (next === 2) {
-          turnTo = turnAt = 0;
-          turning = false;
-        }
+        press(progress);
         schedule();
         options.onSettle(next);
         return;
       }
       if (!settling) velocity = initial;
+      settling = true;
+      settledPending = false;
+      schedule();
+    },
+    nudge(kick) {
+      if (settling && !nudging) return;
+      nudging = true;
+      velocity += kick;
       settling = true;
       settledPending = false;
       schedule();
