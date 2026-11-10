@@ -1,3 +1,5 @@
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - sharp
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: false
+  sharp: true
+  simple-git-hooks: false

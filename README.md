@@ -65,21 +65,25 @@ O app roda na Vercel e guarda os sorteios no Cloudflare D1, acessado pela REST A
 | `CLOUDFLARE_API_TOKEN`      | Token privado da Cloudflare                           |
 | `NEXT_PUBLIC_SITE_URL`      | URL pública, ex.: `https://amigossecretos.vercel.app` |
 
+O login com Google usa o client ID OAuth do site oficial. Num fork, crie um client ID do tipo "Aplicativo da Web" no Google Cloud, com a URL pública e `http://localhost` como origens JavaScript, e defina `NEXT_PUBLIC_GOOGLE_CLIENT_ID`.
+
 Na Vercel, sem essas variáveis o app falha em vez de gravar em outro lugar. Use um banco separado para previews. Para usar o D1 localmente, copie `.env.example` para `.env.local`.
 
 ## Privacidade
 
-- **Organização:** um cookie `HttpOnly` de um ano identifica quem organiza. Não há conta nem recuperação; limpar os cookies ou trocar de navegador remove o acesso.
+- **Organização:** um cookie `HttpOnly` de um ano identifica quem organiza. Sem conta, limpar os cookies ou trocar de navegador remove o acesso.
+- **Conta Google (opcional):** em "Meus sorteios", entrar com o Google guarda os sorteios na conta, para abrir em outro aparelho. O app guarda só o identificador da conta e o e-mail, que aparece na tela. Os sorteios deste navegador passam para a conta; entrar em outra conta troca de conta sem mover nada.
 - **Bilhetes:** códigos aleatórios de 12 caracteres (cerca de 71 bits). Quem tem o link vê o nome sorteado, então envie só para a pessoa certa. O painel de quem organiza nunca recebe os pares.
 - **WhatsApp:** só recebe a mensagem quando você toca em enviar. "Enviado" é uma marcação local, não confirmação de entrega.
-- Páginas privadas não são indexadas e não enviam `Referer`.
+- Páginas privadas não são indexadas. Os bilhetes não enviam `Referer`; "Meus sorteios" envia só a origem do site, que o botão do Google exige.
 
 ## Desenvolvimento
 
 ```sh
 pnpm check        # formatação, lint, tipos e testes
+pnpm storybook    # animações e formulários isolados, em localhost:6006
 pnpm build        # build de produção
-pnpm format       # aplicar formatação (Oxfmt)
+pnpm format       # aplicar formatação (Oxfmt); cada commit já formata os arquivos que entram nele
 pnpm lint         # Oxlint, falha em warnings
 pnpm test:unit    # sorteio, exceções, orçamento, textos e traduções
 pnpm test:browser # componentes em Chromium real (rode `pnpm exec playwright install chromium` antes)
